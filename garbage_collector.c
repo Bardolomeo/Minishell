@@ -1,26 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/26 15:57:10 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/21 17:08:50 by gsapio           ###   ########.fr       */
+/*   Created: 2024/03/21 16:45:04 by gsapio            #+#    #+#             */
+/*   Updated: 2024/03/21 17:17:19 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-t_list	*ft_lstnew(void *content)
+void *ft_malloc(size_t size)
 {
-	t_list	*node;
+	t_garb	*node;
+	void	*ptr;
 
-	node = malloc(sizeof(t_list));
-	if (!node)
+	ptr = malloc(size);
+	if (!(ptr))
 		return (NULL);
-	node->content = content;
-	node->next = NULL;
-	node->pred = NULL;
-	return (node);
+	node = ft_lstnew(ptr);
+	ft_lstadd_front(garbage_collector(), node);
+	return (ptr);
+}
+
+t_garb **garbage_collector()
+{
+	static t_garb *garb_static = NULL;
+
+	return (&garb_static);
 }

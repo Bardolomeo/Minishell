@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/21 15:17:09 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/03/21 17:02:51 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,38 @@
 # define RED "\001\x1b[1;31m\002"
 # define WHITE "\001\x1b[1;0m\002"
 
+typedef char *t_str;
+
 typedef struct s_simcmd
 {
-	char **cmd;
-	char *path;
+    t_str  *cmd_wargs;
+	char    *path;
 } t_simcmd;
 
 typedef struct s_cmd
 {
-	t_simcmd cmd;
-	char **redirection;
-	char **f_name;
+	t_simcmd    cmd;
+    int         fd[2];
 
 } t_cmd;
 
-typedef struct s_cmdline
-{
-    t_cmd *cmd;
-    //optional cmd_separator
-} t_cmdline;
+// typedef struct s_cmdline
+// {
+//     t_cmd       *cmd_table;
+//     //optional cmd_separator
+// } t_cmdline;
 
 typedef struct s_shell
 {
     char        *input;
-    t_cmdline   parsed_input;
+    t_cmd       *cmd_table;
     char        **my_env;
 } t_shell;
+
+typedef struct s_garb
+{
+    void  *ptr;
+    struct s_garb *next;
+} t_garb;
 
 #endif
