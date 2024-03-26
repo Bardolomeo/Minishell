@@ -3,56 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/21 11:17:54 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/22 15:07:14 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/10 14:09:10 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/14 16:14:02 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdio.h>
+//#include <stddef.h>
+//#include <strings.h> 
+//#include "ft_strlen.c"
 #include "libft.h"
 
 char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
-	char	*b;
-	size_t	i;
-	size_t	j;
+	size_t		i;
+	size_t		j;
+	size_t		lilsize;
 
-	i = -1;
-	if (*little == 0)
+	i = 0;
+	j = 0;
+	lilsize = ft_strlen(little);
+	if (lilsize == 0)
 		return ((char *)big);
-	while (++i < len && big[i] != 0)
+	while (big[i] != '\0' && i < len)
 	{
-		j = 0;
-		if (big[i] == little[j])
+		if (big[i] == little[0])
 		{
-			b = (char *)&big[i];
-			while (big[i] == little[j] && i < len && big[i++] != 0)
-			{
-				if (little[++j] == '\0')
-					return (b);
-			}
-			i -= j;
+			j = 0;
+			while (big[i + j] == little[j] && big[i + j] && (i + j) < len)
+				j++;
+			if (j == lilsize)
+				return ((char *)(big + i));
 		}
-		b = NULL;
+		i++;
 	}
-	if (len == 0 || *big == 0)
-		return (NULL);
-	return (b);
+	return (NULL);
 }
-/*
-int main()
-{
-	char haystack[30] = "aaabcabcd";
-	char needle[10] = "aabc";
 
-	printf("%s\n", ft_strnstr(haystack, needle, -1));
-	//printf("%s\n", strnstr("lama donna", "ma do", -1));
-	printf("%s\n", ft_strnstr("lama donna", "", 10));
-	//printf("%s\n", strnstr("lama donna", "", 10));
-	printf("%s\n", ft_strnstr("lama donna", "ma do", 3));
-	//printf("%s\n", strnstr("lama donna", "ma do", 3));
-	printf("%s\n", ft_strnstr("", "lama", 4));
-	//printf("%s\n", strnstr("", "lama", 4));
-}
-*/
+/*int main() {
+    const char *big = "1232123";
+    const char *little = "12321";
+    size_t len = ft_strlen(big);
+
+    // Chiamata alla funzione personalizzata ft_strnstr
+    char *result = ft_strnstr(big, little, len);
+
+    // Stampa il risultato
+    if (result != NULL) {
+        printf("La sottostringa è stata trovata: %s\n", result);
+    } else {
+        printf("La sottostringa non è stata trovata.\n");
+    }
+    return 0;
+}*/

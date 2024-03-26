@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+         #
+#    By: mtani <mtani@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/03/21 14:43:57 by gsapio           ###   ########.fr        #
+#    Updated: 2024/03/26 11:56:52 by mtani            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS	= main.c
+SRCS	= main.c ft_cd.c ft_pwd.c ft_echo.c ft_env.c ft_export.c ft_unset.c ft_exec.c garbage_collector.c
 
 LFLAGS = -lft -lreadline
 

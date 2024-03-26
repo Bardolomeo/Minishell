@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/13 11:52:40 by mtani             #+#    #+#             */
-/*   Updated: 2023/10/17 16:05:58 by mtani            ###   ########.fr       */
+/*   Created: 2024/03/26 10:25:52 by mtani             #+#    #+#             */
+/*   Updated: 2024/03/26 10:44:30 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_putchar_fd(char c, int fd)
+void	ft_env(t_shell *shell)
 {
-	write(fd, &c, 1);
+	int		i;
+
+	i = 0;
+	while (shell->my_env[i])
+	{
+		ft_putendl_fd(shell->my_env[i], 1);
+		i++;
+	}
 }

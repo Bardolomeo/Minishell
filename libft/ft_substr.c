@@ -3,59 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/22 16:05:53 by gsapio            #+#    #+#             */
-/*   Updated: 2023/11/18 19:11:40 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/11 10:57:18 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/16 16:16:28 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdlib.h>
+//#include <stdio.h>
+//#include "ft_strlen.c"
 #include "libft.h"
 
-static char	*ft_allocstr(int *copy_len, size_t len)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*copy;
+	char	*sub;
+	size_t	i;
+	size_t	s_len;
 
-	if (len >= (size_t)(*copy_len) && *copy_len > 0)
-		copy = (char *)malloc(sizeof(*copy) * (*copy_len) + 1);
+	if (s == NULL)
+		return (NULL);
+	i = 0;
+	s_len = ft_strlen(s);
+	if (start > s_len)
+		start = s_len;
+	if (len > (s_len - start))
+		len = (s_len - start);
+	if (start == s_len)
+		sub = (char *)malloc(sizeof(char));
 	else
-		copy = (char *)malloc(sizeof(*copy) * len + 1);
-	if (!copy)
+		sub = (char *)malloc((sizeof(char) * len) + 1);
+	if (sub == NULL)
 		return (NULL);
-	return (copy);
+	while (i < len && s[start] != '\0' && start < s_len)
+		sub[i++] = s[start++];
+	sub[i] = '\0';
+	return (sub);
 }
 
-char	*ft_substr(char const *s, int start, int len)
+/*int main()
 {
-	char	*copy;
-	int		i;
-	int		copy_len;
-
-	copy_len = ft_strlen(s) - start;
-	copy = ft_allocstr(&copy_len, len);
-	if (!copy)
-		return (NULL);
-	if (start >= (int)ft_strlen(s))
-	{
-		free (copy);
-		copy = (char *)malloc(sizeof(*copy) * 1);
-		if (!copy)
-			return (NULL);
-		*copy = 0;
-		return (copy);
-	}
-	if (!copy)
-		return (NULL);
-	i = -1;
-	while (++i < len && s[i + start] != 0)
-		copy[i] = s[i + start];
-	copy[i] = 0;
-	return (copy);
-}
-/*
-int main()
-{
-	char str[] = "123456";
-	printf("%s\n", ft_substr(str, 100, 1));
-}
-*/
+	//char esempio[] = "Hello my baby hello my honey hello my ragtime gal";
+	
+	printf("%s\n", ft_substr("hola", 0, 18446744073709551615));
+}*/

@@ -3,66 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/23 18:44:23 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/31 20:42:29 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/11 13:52:04 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/20 16:49:36 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include "ft_strlen.c"
+//#include <stdlib.h>
 #include "libft.h"
 
-static void	ft_ind_trim(int *start, int *end, const char *s1, const char *set)
+static int	ft_check_set(char c, char const *set)
 {
 	int	i;
 
 	i = 0;
-	while (i < (int)ft_strlen(set))
+	while (set[i] != '\0')
 	{
-		while (s1[*start] == set[i] && *start < *end)
-		{
-			(*start)++;
-			i = 0;
-		}
+		if (set[i] == c)
+			return (1);
 		i++;
 	}
-	i = 0;
-	while (i < (int)ft_strlen(set))
-	{
-		while (s1[*end] == set[i] && *end > *start)
-		{
-			(*end)--;
-			i = 0;
-		}
-		i++;
-	}
+	return (0);
 }
 
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	int	start;
-	int	end;
+	int		begin;
+	int		end;
+	char	*trimmed;
+	int		i;
 
-	if (!s1)
-		return (ft_strdup(""));
-	if (!set)
-		return (ft_strdup(s1));
-	start = 0;
+	begin = 0;
+	i = 0;
 	end = ft_strlen(s1) - 1;
-	ft_ind_trim(&start, &end, s1, set);
-	if (start == end && s1[start + 1] == 0)
-		return (ft_strdup(""));
-	return (ft_substr(s1, start, end - start + 1));
+	while (s1[begin] != '\0' && ft_check_set(s1[begin], set) == 1)
+		begin++;
+	while (end > begin && ft_check_set(s1[end], set) == 1)
+		end--;
+	trimmed = (char *)malloc(((end - begin) * sizeof(char)) + 2);
+	if (trimmed == NULL)
+		return (NULL);
+	while (begin < (end + 1))
+	{
+		trimmed[i] = s1[begin];
+		i++;
+		begin++;
+	}
+	trimmed[i] = '\0';
+	return (trimmed);
 }
-/*
-int main(void)
-{
-	printf("%s \n", ft_strtrim("abcdba", "acb"));
 
-	printf("%s\n", ft_strtrim(" ammazza ", " a"));
-	printf("%s\n", ft_strtrim(" ammazza ", " amz"));
-	//printf("%s\n", ft_strtrim(ptr, " a"));
-	//printf("%s\n", ft_strtrim(" ammazza ", ptr));
-	printf("%s\n", ft_strtrim("", ""));
-}
-*/
+/*int main()
+{
+	char string[] = "";
+	char set[] =  "z";
+	printf("%s\n",  ft_strtrim(string, set));
+}*/

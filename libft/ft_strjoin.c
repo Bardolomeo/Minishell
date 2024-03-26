@@ -3,44 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/23 17:25:46 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/28 13:05:01 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/11 11:12:33 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/14 15:54:04 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include "ft_strlen.c"
+//#include <stdlib.h>
 #include "libft.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	size_t	len;
-	size_t	i;
-	size_t	j;
-	char	*res;
+	char	*join;
+	size_t	s1_len;
+	size_t	s2_len;
 
-	i = -1;
-	len = ft_strlen(s1) + ft_strlen(s2);
-	if ((len) == 0)
-		res = (char *)malloc(sizeof(char) * 1);
-	else
-		res = (char *)malloc(sizeof(char) * (len) + 1);
-	if (!res)
+	s1_len = ft_strlen(s1);
+	s2_len = ft_strlen(s2);
+	join = (char *)malloc(sizeof(char) * ((s1_len + s2_len) + 1));
+	if (join == NULL)
 		return (NULL);
-	j = 0;
-	while (++i < len && s1[j] != 0)
-		res[i] = s1[j++];
-	j = 0;
-	while (i < len && s2[j] != 0)
-		res[i++] = s2[j++];
-	res[i] = 0;
-	return (res);
+	ft_memcpy(join, s1, s1_len);
+	ft_memcpy(join + s1_len, s2, s2_len);
+	join[s1_len + s2_len] = '\0';
+	return (join);
 }
-/*
-int main(void)
+
+/*int	main()
 {
-	printf("%s\n", ft_strjoin("cacca ", "pupu"));
-	printf("%s\n", ft_strjoin("", ""));
-	return (0);
-}
-*/
+	char	s1[] = "lorem ipsum";
+	char	s2[] = "dolor sit amet";
+
+	char *result = ft_strjoin(s1, s2);
+	printf("%s", result);
+	free(result);
+}*/

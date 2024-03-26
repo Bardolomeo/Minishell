@@ -1,28 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                        :+:      :+:    :+:  */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/17 16:18:54 by gsapio            #+#    #+#             */
-/*   Updated: 2023/07/24 16:20:39 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/09 11:11:18 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/18 11:26:10 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdio.h>
 #include "libft.h"
 
 int	ft_isalpha(int c)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
 		return (1);
 	else
 		return (0);
 }
 
-/*
-int main()
+/*int	main(void)
 {
-	printf("%d\n", ft_isalpha('C'));
-}
-*/
+	int c = 'J';
+
+	if (ft_isalpha(c) == 1)
+		printf("%c is alphabetical\n", c);
+	else
+		printf("%c is NOT alphabetical\n", c);
+}*/

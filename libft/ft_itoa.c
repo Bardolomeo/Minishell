@@ -3,100 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/25 14:58:32 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/26 13:57:13 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/12 13:24:45 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/14 15:37:43 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdlib.h>
 #include "libft.h"
 
-static char	*ft_exception(int n)
+static int	ft_count_digits(int n)
 {
-	char	*str;
+	int			i;
+	long long	num;
 
-	if (n == 0)
-	{
-		str = ft_calloc(2, sizeof(char));
-		if (!str)
-			return (NULL);
-		str[0] = 48;
-		str[1] = 0;
-		return (str);
-	}
-	return (NULL);
-}
-
-static int	ft_sign_and_count(int n, int *sign, long int *nb)
-{
-	int			len;
-	long int	numb;
-
-	len = 0;
-	numb = n;
-	if (numb < 0)
-	{
-		*sign = -1;
-		numb = -numb;
-		len++;
-	}
-	*nb = numb;
-	while (numb > 0)
-	{
-		numb /= 10;
-		len++;
-	}
-	return (len);
-}
-
-static void	ft_invert(char	*str)
-{
-	size_t	i;
-	size_t	j;
-	char	tmp;
-
+	num = (long long)n;
 	i = 0;
-	j = ft_strlen(str) - 1;
-	while (i < ft_strlen(str) / 2)
+	if (num == 0)
+		return (1);
+	if (num < 0)
 	{
-		tmp = str[i];
-		str[i++] = str[j];
-		str[j--] = tmp;
+		num *= -1;
+		i++;
 	}
-	str[ft_strlen(str)] = 0;
+	while (num > 0)
+	{
+		num /= 10;
+		i++;
+	}
+	return (i);
 }
 
 char	*ft_itoa(int n)
 {
-	long int	nb;
-	int			sign;
-	int			len;
-	char		*ret;
-	int			i;
+	char			*str;
+	long long		num;
+	int				n_len;
+	int				i;
+	int				j;
 
-	sign = 1;
-	len = ft_sign_and_count(n, &sign, &nb);
-	if (n == 0)
-		return (ft_exception(n));
-	ret = ft_calloc(len + 1, sizeof(char));
-	if (!ret)
+	i = 0;
+	n_len = ft_count_digits(n);
+	j = n_len - 1;
+	num = (long long)n;
+	str = (char *)malloc(sizeof(char) * (n_len + 1));
+	if (str == NULL)
 		return (NULL);
-	i = -1;
-	while (nb > 0)
+	if (num < 0)
 	{
-		ret[++i] = (nb % 10) + 48;
-		nb /= 10;
+		str[i++] = '-';
+		num *= -1;
 	}
-	if (sign == -1)
-		ret[++i] = '-';
-	ft_invert(ret);
-	return (ret);
+	while (i++ < n_len)
+	{
+		str[j--] = (char)((num % 10) + 48);
+		num /= 10;
+	}
+	str[i - 1] = '\0';
+	return (str);
 }
-/*
-int main()
+
+/*int main()
 {
-	printf("%s\n", ft_itoa(0));
-	printf("%s\n", ft_itoa(-1234));
-}
-*/
+	//printf("%d\n", ft_count_digits(-2147483648));
+	char *test = ft_itoa(-2147483648);
+	printf("%s\n", test);
+	free(test);
+}*/

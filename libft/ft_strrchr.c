@@ -3,37 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 16:57:39 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/22 14:21:45 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/10 12:04:52 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/16 14:28:09 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include "ft_strlen.c"
+//#include <stdlib.h>
+//#include <string.h>
 #include "libft.h"
 
 char	*ft_strrchr(const char *s, int c)
 {
-	int		i;
-	char	*ptr;
-	char	*c2;
+	int		len;
 
-	ptr = (char *)s;
-	c2 = (char *)&c;
-	i = ft_strlen(ptr) + 1;
-	while (--i >= 0)
-		if (ptr[i] == *c2)
-			return (&ptr[i]);
+	len = ft_strlen(s);
+	while (len >= 0)
+	{
+		if ((unsigned char)s[len] == (unsigned char)c)
+			return ((char *)s + len);
+		len--;
+	}
 	return (NULL);
 }
-/*
-int main()
+
+/*int main()
 {
-	char str[50] = "ciau suca";
-	char s[] = "tripouille";cd 
-	printf("%s\n", ft_strrchr(s, 't'));
-	printf("%s\n", ft_strrchr("zio pera", 'u'));
-	printf("%s\n", ft_strrchr("uuuuuu", 'u'));
-	printf("%s\n", ft_strrchr("", '\0'));
-}
-*/
+	char string[] = "Hello my baby hello my honey hello my ragtime gal";
+	char *test = ft_strrchr(string, '\0');
+	char *test2 = strrchr(string, '\0');
+	printf("%s\n", test);
+	printf("%s\n", test2);
+}*/

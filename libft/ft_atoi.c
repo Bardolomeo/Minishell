@@ -3,64 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/21 11:51:14 by gsapio            #+#    #+#             */
-/*   Updated: 2023/12/04 17:32:20 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/10 14:36:43 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/16 14:39:55 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdio.h>
+//#include <stdlib.h>
 #include "libft.h"
-
-static void	ft_string_to_int(int *nb, size_t *i, size_t *len, const char *nptr)
-{
-	int		prov;
-	size_t	j;
-
-	while (*len > 0)
-	{
-		j = 0;
-		prov = nptr[*i] - 48;
-		while (j < (*len - 1))
-		{
-			prov *= 10;
-			j++;
-		}
-		*nb += prov;
-		(*len)--;
-		(*i)++;
-	}
-}
 
 int	ft_atoi(const char *nptr)
 {
-	size_t	i;
-	int		sign;
-	int		nb;
-	size_t	len;
+	int		i;
+	int		is_neg;
+	long	num;
 
 	i = 0;
-	sign = 1;
-	len = 0;
-	nb = 0;
-	while ((nptr[i] >= 9 && nptr[i] <= 13) || nptr[i] == 32)
+	is_neg = 1;
+	num = 0;
+	while ((nptr[i] >= 9 && nptr[i] <= 13) || nptr[i] == ' ')
 		i++;
-	if (nptr[i] == '-')
-		sign = -1;
 	if (nptr[i] == '-' || nptr[i] == '+')
-		i++;
-	while (nptr[i] >= 48 && nptr[i] <= 57)
 	{
+		if (nptr[i] == '-')
+			is_neg *= -1;
 		i++;
-		len++;
 	}
-	i -= len;
-	ft_string_to_int(&nb, &i, &len, nptr);
-	return (nb * sign);
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		num *= 10;
+		num += nptr[i] - 48;
+		i++;
+	}
+	return ((int)(num * is_neg));
 }
-/*
-int main()
+
+/*int main()
 {
-	printf("%d", ft_atoi("   2147483647"));
-}
-*/
+	char string[] = "\007 8";
+
+	printf("%i\n", ft_atoi(string));
+	printf("%i\n", atoi(string));
+}*/

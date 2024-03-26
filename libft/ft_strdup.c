@@ -3,33 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/21 14:16:25 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/31 19:29:54 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/10 15:18:19 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/16 12:12:12 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include "ft_strlen.c"
 #include "libft.h"
 
 char	*ft_strdup(const char *s)
 {
-	size_t	len;
-	size_t	i;
-	char	*str;
+	char	*dst;
+	int		i;
 
-	len = ft_strlen(s);
-	str = (char *)malloc(sizeof(*str) * (len + 1));
-	if (!str)
+	dst = malloc(sizeof(char) * (ft_strlen(s) + 1));
+	if (dst == NULL)
 		return (NULL);
-	i = -1;
-	while (s[++i])
-		str[i] = s[i];
-	str[i] = 0;
-	return (str);
+	i = 0;
+	while (s[i])
+	{
+		dst[i] = s[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (dst);
 }
-/*
-int main()
+
+/*int main() 
 {
-	printf("%s", ft_strdup("qwertyuiopasdfghjkwrghrysjharthtehthrehthth"));
+    const char *str = "Ciao, mondo!"; // La stringa da duplicare
+    char *duplicate;
+
+    // Utilizza la funzione strdup per duplicare la stringa
+    duplicate = strdup(str);
+
+    if (duplicate != NULL) {
+        // Stampa la stringa duplicata
+        printf("La stringa duplicata è: %s\n", duplicate);
+
+        // Libera la memoria allocata per la stringa duplicata
+        free(duplicate);
+    } else {
+        printf("Errore durante la duplicazione della stringa.\n");
+    }
+
+    return 0;
 }*/

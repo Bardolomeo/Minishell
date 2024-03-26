@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 16:27:04 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/18 16:27:06 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/10 11:22:09 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/10 16:08:44 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 int	ft_toupper(int c)
 {
-	if (c >= 97 && c <= 122)
-		return (c - 32);
-	else
-		return (c);
+	if (c >= 'a' && c <= 'z')
+	{
+		c -= 32;
+	}
+	return (c);
 }
-/*
-int main()
+
+/*int main()
 {
-	printf("%d\n", ft_toupper('c'));
-	printf("%d\n", ft_toupper('A'));
-	printf("%d\n", ft_toupper('.'));
-	printf("%d\n", ft_toupper('b'));
-	printf("%d\n", ft_toupper(4.7));
+	char letter = '-';
+	char upper = ft_toupper(letter);
+
+	printf("%c", upper);
 }*/

@@ -3,30 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/17 16:18:54 by gsapio            #+#    #+#             */
-/*   Updated: 2023/07/24 16:20:39 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/09 12:52:53 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/18 14:52:57 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdlib.h>
 #include "libft.h"
 
 void	*ft_memset(void *s, int c, size_t n)
 {
-	unsigned char	*ptr;
+	size_t			i;
+	unsigned char	*tmp;
 
-	ptr = (unsigned char *) s;
-	while (n--)
-		*ptr++ = (unsigned char) c;
+	tmp = (unsigned char *)s;
+	i = 0;
+	while (i < n)
+	{
+		*(tmp + i) = (unsigned char)c;
+		i++;
+	}
 	return (s);
 }
-/*
-int main()
-{
-	char str[50] = "ciaocane";
-	ft_memset(str, 'a', 4);
-	printf("%s\n", str);
-	ft_memset(str, 'd', 0);
-	printf("%s\n", str);
+
+/*int main() {
+    char arr[10];
+
+    ft_memset(arr, '5', sizeof(arr));
+	for (size_t i = 0; i < sizeof(arr); i++) 
+	{
+        printf("%c ", arr[i]);
+    }
+    printf("\n");
 }*/

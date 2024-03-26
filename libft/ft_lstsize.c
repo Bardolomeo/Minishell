@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/26 16:11:20 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/26 16:19:28 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/14 16:07:05 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/18 14:42:06 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,35 @@
 
 int	ft_lstsize(t_list *lst)
 {
-	int		size;
-	t_list	*ptr;
+	int		i;
+	t_list	*tmp;
 
-	if (!lst)
-		return (0);
-	size = 0;
-	ptr = lst;
-	while (ptr)
+	i = 0;
+	tmp = lst;
+	while (tmp != NULL)
 	{
-		size++;
-		ptr = ptr->next;
+		tmp = tmp->next;
+		i++;
 	}
-	return (size);
+	return (i);
 }
+
+/*int main() 
+{
+    t_list *node1 = (t_list *)malloc(sizeof(t_list));
+    t_list *node2 = (t_list *)malloc(sizeof(t_list));
+    t_list *node3 = (t_list *)malloc(sizeof(t_list));
+
+    node1->content = "Hello";
+    node1->next = node2;
+    node2->content = "you";
+    node2->next = node3;
+    node3->content = "there";
+    node3->next = NULL;
+    int size = ft_lstsize(node1);
+	printf("Size: %d\n", size);
+	free(node1);
+    free(node2);
+    free(node3);
+    return (0);
+}*/

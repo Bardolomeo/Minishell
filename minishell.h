@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/21 17:02:51 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/03/26 12:01:32 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <sys/wait.h>
+# include <pthread.h>
 
 # define RED "\001\x1b[1;31m\002"
 # define WHITE "\001\x1b[1;0m\002"
@@ -59,14 +63,26 @@ typedef struct s_cmd
 typedef struct s_shell
 {
     char        *input;
+	char		**args;
     t_cmd       *cmd_table;
     char        **my_env;
 } t_shell;
 
-typedef struct s_garb
-{
-    void  *ptr;
-    struct s_garb *next;
-} t_garb;
+// Builtins
+
+void	ft_cd(t_shell *shell);
+void	ft_pwd(void);
+void	ft_echo(t_shell *shell);
+void	ft_env(t_shell *shell);
+void	ft_export(t_shell *shell);
+void	ft_unset(t_shell *shell);
+void	ft_exec(t_shell *shell);
+
+// Garbage collector
+
+void	*ft_malloc(size_t size);
+void	clear_garbage(void);
+t_list	**garbage_collector(void);
+void	ft_free_array(char **array);
 
 #endif

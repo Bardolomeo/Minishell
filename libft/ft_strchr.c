@@ -3,36 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 16:37:16 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/22 14:15:30 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/10 11:30:49 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/16 14:25:43 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdlib.h>
 #include "libft.h"
 
 char	*ft_strchr(const char *s, int c)
 {
-	char	*ptr;
 	int		i;
-	char	*c2;
 
 	i = 0;
-	ptr = (char *)s;
-	c2 = (char *)&c;
-	while (ptr[i] != *c2 && ptr[i] != 0)
+	while ((unsigned char)s[i] != '\0')
+	{
+		if ((unsigned char)s[i] == (unsigned char)c)
+			return ((char *)(s + i));
 		i++;
-	if (ptr[i] == *c2)
-		return (&ptr[i]);
-	return (NULL);
+	}
+	if ((unsigned char)s[i] == (unsigned char)c)
+		return ((char *)s + i);
+	else
+		return (NULL);
 }
-/*
-int main()
+
+/*int main()
 {
-	char str[50] = "ciau suca";
-	printf("%s\n", ft_strchr(str, 'u'));
-	printf("%s\n", ft_strchr("zio pera", 'u'));
-	printf("%s\n", ft_strchr("uuuuuu", 'u'));
-	printf("%s\n", ft_strchr("", '\0'));
+	char string[] = "tripouille";
+	char *find = ft_strchr(string, 't' + 256);
+	printf("%s", find);
 }*/

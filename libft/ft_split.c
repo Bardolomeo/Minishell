@@ -3,124 +3,124 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/24 19:14:19 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/31 20:12:23 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/11 14:59:50 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/19 10:58:35 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include "ft_calloc.c"
+//#include <stdlib.h>
 #include "libft.h"
 
-static int	ft_stralloc(char	*scpy, char	**strs, char c)
+static size_t	ft_count_arr(char const *s, char c)
 {
-	int		i;
-	int		j;
-	size_t	cnt_char;
-
-	i = 0;
-	j = -1;
-	cnt_char = 0;
-	while (scpy[i] != 0)
-	{
-		cnt_char = 0;
-		while (scpy[i] == c)
-			i++;
-		while (scpy[i] != 0 && scpy[i++] != c)
-			(cnt_char)++;
-		if (!(scpy[i] == 0 && scpy[i - 1] == c && scpy[i - 2] == c))
-			strs[++j] = (char *)ft_calloc((cnt_char) + 1, sizeof(char));
-		if (!strs[j])
-		{
-			while (j >= 0)
-				free(strs[j--]);
-			free(strs);
-			return (0);
-		}
-	}
-	return (1);
-}
-
-static void	ft_count_words(char	*scpy, size_t	*cnt, char c)
-{
-	while (*scpy)
-	{
-		while (*scpy == c)
-			scpy++;
-		if (*scpy != 0)
-			(*cnt)++;
-		while (*scpy != c && *scpy != 0)
-			scpy++;
-	}
-}
-
-static int	ft_word_ini(char	*scpy, char	**strs, char c, size_t cnt)
-{
+	size_t	count;
 	size_t	i;
-	size_t	j;
-	size_t	k;
+	size_t	in_arr;
 
 	i = 0;
-	if (!ft_stralloc(scpy, strs, c))
-		return (0);
-	j = 0;
-	while (scpy[j] && i < cnt)
+	count = 0;
+	in_arr = 0;
+	while (s[i] != '\0')
 	{
-		k = 0;
-		while (scpy[j] == c && scpy[j] != 0)
-			j++;
-		while (scpy[j] != c && scpy[j] != 0)
+		if (s[i] != c && in_arr == 0)
 		{
-			strs[i][k] = scpy[j];
-			k++;
-			j++;
+			count++;
+			in_arr = 1;
 		}
-		strs[i][k] = 0;
+		else if (s[i] == c)
+			in_arr = 0;
 		i++;
 	}
-	return (1);
+	return (count);
+}
+
+static char	*ft_make_string(char const *s, size_t start, char c)
+{
+	char	*division;
+	size_t	i;
+	size_t	j;
+	size_t	str_len;
+
+	i = 0;
+	j = start;
+	str_len = 0;
+	if (s[i] == '\0' || s == 0)
+		return (NULL);
+	while (s[j] != c && s[j])
+	{
+		j++;
+		str_len++;
+	}
+	division = (char *)ft_calloc(str_len + 1, sizeof(char));
+	if (division == NULL)
+		return (NULL);
+	while (i < str_len)
+		division[i++] = s[start++];
+	division[i] = '\0';
+	return (division);
+}
+
+static void	ft_clear(char **array, size_t arr_index)
+{
+	while (arr_index-- > 0)
+		free(array[arr_index]);
+	free(array);
+}
+
+static char	**ft_make_split(char **array, char const *s, char c)
+{
+	int	i;
+	int	in_arr;
+	int	arr_index;
+
+	i = -1;
+	in_arr = 0;
+	arr_index = 0;
+	while (s[++i] != '\0')
+	{
+		if (s[i] != c && in_arr == 0)
+		{
+			array[arr_index++] = ft_make_string(s, i, c);
+			if (array[arr_index - 1] == NULL)
+			{
+				ft_clear(array, arr_index);
+				return (NULL);
+			}
+			in_arr = 1;
+		}
+		else if (s[i] == c)
+			in_arr = 0;
+	}
+	array[arr_index] = 0;
+	return (array);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char	**strs;
-	char	*scpy;
-	size_t	cnt;
+	char	**array;
 
-	if (s == NULL)
+	array = (char **)ft_calloc(ft_count_arr(s, c) + 1, sizeof(char *));
+	if (array == NULL)
 		return (NULL);
-	scpy = (char *)s;
-	cnt = 0;
-	ft_count_words(scpy, &cnt, c);
-	if (cnt == 0)
-	{
-		strs = (char **)ft_calloc(1, sizeof(char *));
-		if (!strs)
-			return (NULL);
-		strs[0] = NULL;
-		return (strs);
-	}
-	strs = (char **)ft_calloc((cnt + 1), sizeof(char *));
-	if (strs == NULL)
+	array = ft_make_split(array, s, c);
+	if (array == NULL)
 		return (NULL);
-	if (!ft_word_ini(scpy, strs, c, cnt))
-		return (NULL);
-	strs[cnt] = NULL;
-	return (strs);
+	else
+		return (array);
 }
-/*
-int main()
-{
-	char **strs = ft_split("split  ||this|for|me|||||!|", '|');
-	int i = 0;
 
-	while (strs[i])
+/*int main(void)
+{
+	int i = 0;
+	char string[] = "^^^1^^2a,^^^^3^^^^--h^^^^";
+	char **matrix = ft_split(string, '^');
+	printf("%d\n", ft_count_arr(string, '^'));
+	while (matrix[i])
 	{
-		printf("%s\n", strs[i]);
-		free(strs[i]);
+		printf("%s\n", matrix[i]);
 		i++;
 	}
-	free(strs);
-	i++;
-}
-*/
+}*/

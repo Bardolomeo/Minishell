@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:04 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/21 17:17:19 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/03/26 12:01:06 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void *ft_malloc(size_t size)
 {
-	t_garb	*node;
+	t_list	*node;
 	void	*ptr;
 
 	ptr = malloc(size);
@@ -25,9 +25,39 @@ void *ft_malloc(size_t size)
 	return (ptr);
 }
 
-t_garb **garbage_collector()
+void	ft_free_array(char **array)
 {
-	static t_garb *garb_static = NULL;
+	int	i;
+
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
+void	clear_garbage()
+{
+	t_list	*node;
+	t_list	*tmp;
+
+	node = *garbage_collector();
+	while (node)
+	{
+		tmp = node->next;
+		free(node->content);
+		free(node);
+		node = tmp;
+	}
+	*garbage_collector() = NULL;
+
+}
+
+t_list **garbage_collector()
+{
+	static t_list *garb_static = NULL;
 
 	return (&garb_static);
 }

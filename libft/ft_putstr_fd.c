@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/26 14:35:26 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/26 14:38:48 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/13 12:09:32 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/17 16:22:52 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,8 @@
 
 void	ft_putstr_fd(char *s, int fd)
 {
-	write(fd, s, ft_strlen(s));
+	size_t	s_len;
+
+	s_len = ft_strlen(s);
+	write(fd, s, s_len);
 }

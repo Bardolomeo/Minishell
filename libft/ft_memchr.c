@@ -3,40 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/18 19:20:31 by gsapio            #+#    #+#             */
-/*   Updated: 2023/11/01 14:57:15 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/10 12:30:04 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/16 16:58:38 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
 #include "libft.h"
 
 void	*ft_memchr(const void *s, int c, size_t n)
 {
-	unsigned char	*ptr;
-	unsigned char	*data;
 	size_t			i;
+	unsigned char	*tmp;
+	unsigned char	tmp_c;
 
-	ptr = (unsigned char *)s;
-	data = (unsigned char *)&c;
+	tmp = (unsigned char *)s;
+	tmp_c = (unsigned char)c;
 	i = 0;
+	if (n <= 0)
+		return (NULL);
 	while (i < n)
 	{
+		if ((unsigned char)tmp[i] == (unsigned char)tmp_c)
+			return ((void *)s + i);
 		i++;
-		if (*ptr == *data)
-			return ((void *)ptr);
-		ptr++;
 	}
 	return (NULL);
 }
-/*
-int main()
+
+/*int main() 
 {
-	char array[50] = {0, 1, 2, 3, 4, 5};
-	int arr[50] = {10, 20, 30, 40, 50, 60, 70};
-	printf("%d\n", *(int *)(ft_memchr(arr, 20, 5)));
-	printf("%d\n", *(int *)(memchr(arr, 20, 5)));
-	printf("%s\n", (char *)(ft_memchr(array, 256 + 2, 3)));
-	printf("%s\n", (char *)(memchr(array, 256 + 2, 3)));
+	
+    void *result = ft_memchr("bbabcdef", 0, 0);
+	void *result2 = memchr("bbabcdef", 0, 0);
+	printf("%s\n", (char *)result);
+	printf("%s\n", (char *)result2);
+	
+	int tab[7] = {-49, 49, 1, -1, 0, -2, 2};
+
+	printf("%s", (char *)ft_memchr(tab, -1, 7));
+	printf("%s", (char *)memchr(tab, -1, 7));
 }*/

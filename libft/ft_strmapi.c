@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/26 14:01:08 by gsapio            #+#    #+#             */
-/*   Updated: 2023/10/26 14:15:43 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/13 10:57:05 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/14 16:10:13 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,22 @@
 
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 {
-	char			*ret;
-	unsigned int	i;
+	int		i;
+	int		s_len;
+	char	*str;
 
 	if (s == NULL)
 		return (NULL);
-	ret = (char *)malloc((ft_strlen(s) + 1) * sizeof(char));
-	if (!ret)
-		return (NULL);
 	i = 0;
-	while (s[i] != 0)
+	s_len = ft_strlen(s);
+	str = malloc((sizeof(char) * s_len) + 1);
+	if (str == NULL)
+		return (NULL);
+	while (s[i] != '\0')
 	{
-		ret[i] = f(i, s[i]);
+		str[i] = f(i, s[i]);
 		i++;
 	}
-	ret[i] = 0;
-	return (ret);
+	str[i] = '\0';
+	return (str);
 }
-/*
-char my_func(unsigned int i, char str)
-{ 	printf("My inner function: index = %d and %c\n", i, str);
-	return str - 32;
-}
-int main()
-{
-	char str[10] = "hello.";
-	printf("The result is %s\n", str);
-	char *result = ft_strmapi(str, my_func);
-	printf("The result is %s\n", result);
-	return 0;
-}
-*/

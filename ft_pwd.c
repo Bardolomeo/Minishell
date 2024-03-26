@@ -1,18 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/13 11:52:40 by mtani             #+#    #+#             */
-/*   Updated: 2023/10/17 16:05:58 by mtani            ###   ########.fr       */
+/*   Created: 2024/03/26 10:22:26 by mtani             #+#    #+#             */
+/*   Updated: 2024/03/26 10:24:09 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_putchar_fd(char c, int fd)
+void	ft_pwd()
 {
-	write(fd, &c, 1);
+	char	*pwd;
+
+	pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+		perror(RED "minishell$ " WHITE);
+	else
+	{
+		ft_putendl_fd(pwd, 1);
+		free(pwd);
+	}
 }

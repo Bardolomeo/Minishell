@@ -3,46 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/17 16:18:54 by gsapio            #+#    #+#             */
-/*   Updated: 2023/07/24 16:20:39 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/09 12:59:16 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/18 15:01:10 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdlib.h>
 #include "libft.h"
-#include <string.h>
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	unsigned char	*ptr;
-	unsigned char	*pt;
+	size_t	i;
 
-	if (dest == NULL && src == NULL)
+	if (!dest && !src)
 		return (dest);
-	ptr = (unsigned char *)dest;
-	pt = (unsigned char *)src;
-	while (n--)
+	i = 0;
+	while (i < n)
 	{
-		*ptr = *pt;
-		ptr++;
-		pt++;
+		*(unsigned char *)(dest + i) = *(unsigned char *)(src + i);
+		i++;
 	}
 	return (dest);
 }
-/*
-int main()
-{
-	char src[20] = "12345678";
-	char dest[20] = "abcdefghijklmno";
 
-	ft_memcpy(dest, src, 5);
+/*int main() {
+    char src[] = "Hello you there";
+    char dest[15];
+	ft_memcpy(dest, src, sizeof(src));
 	printf("%s\n", dest);
-	ft_memcpy(dest, src, 0);
-	printf("%s\n", dest);
-	ft_memcpy(dest, src, 8);
-	printf("%s\n", dest);
-	ft_memcpy(dest, src, 9);
-	printf("%s\n", dest);
-}
-*/
+}*/

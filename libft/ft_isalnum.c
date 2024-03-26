@@ -3,29 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/17 16:18:54 by gsapio            #+#    #+#             */
-/*   Updated: 2023/07/24 16:20:39 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/09 12:20:44 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/18 11:23:58 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <stdio.h>
+//#include "ft_isalpha.c"
+//#include "ft_isdigit.c"
 #include "libft.h"
 
 int	ft_isalnum(int c)
 {
-	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+	if (ft_isalpha(c) == 1 || ft_isdigit(c) == 1)
 		return (1);
-	else if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+	else
+		return (0);
 }
-/*
-int main()
+
+/*int	main(void)
 {
-	printf("%d\n", ft_isalnum('A'));
-	printf("%d\n", ft_isalnum('z'));
-	printf("%d\n", ft_isalnum('0'));
-	printf("%d\n", ft_isalnum('9'));
-	printf("%d\n", ft_isalnum(';'));
+	int c = '-';
+	
+	if (ft_isalnum(c) == 1)
+		printf("%c is alphanumerical\n", c);
+	else
+		printf("%c is NOT alphanumerical\n", c);
 }*/

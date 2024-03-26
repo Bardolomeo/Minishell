@@ -3,38 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/21 14:02:28 by gsapio            #+#    #+#             */
-/*   Updated: 2023/11/01 15:35:21 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/10 15:24:10 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/18 15:01:36 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+//#include <string.h>
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include "ft_bzero.c"
 #include "libft.h"
-#include <limits.h>
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {
-	void	*ptr;
+	void		*tmp;
+	long long	result;
 
-	if (nmemb != 0 && size > ULONG_MAX / nmemb)
+	if (nmemb == 0 || size == 0)
+		return (malloc(0));
+	result = (long long)nmemb * (long long)size;
+	if (result > 4294967295)
 		return (NULL);
-	ptr = (void *)malloc(nmemb * size);
-	if (ptr == NULL)
-		return (ptr);
-	ft_bzero(ptr, nmemb * size);
-	return (ptr);
+	tmp = (void *)malloc(nmemb * size);
+	if (tmp == NULL)
+		return (NULL);
+	ft_bzero(tmp, size * nmemb);
+	return (tmp);
 }
-/*
-int main()
+
+/*int main() 
 {
- 	void *str = ft_calloc(0, 0);
-	void *str2 = calloc(0, 0);
-
-
- 	if (str == ((void*)0))
-		printf("suca\n");
-	if (str2 != ((void*)0))
-		printf("noi");
-}
-*/
+	int size = 8539;
+ 
+ 	void *d1 = ft_calloc(size, sizeof(int));
+ 	void *d2 = calloc(size, sizeof(int));
+ 	if (memcmp(d1, d2, size * sizeof(int)))
+ 		printf("TEST FAILED");
+ 	free(d1);
+ 	free(d2);
+ 	printf("TEST SUCCESS");	
+}*/

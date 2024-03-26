@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/28 11:46:22 by gsapio            #+#    #+#             */
-/*   Updated: 2023/12/16 14:29:57 by gsapio           ###   ########.fr       */
+/*   Created: 2023/10/16 17:11:40 by mtani             #+#    #+#             */
+/*   Updated: 2023/10/18 17:15:15 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,28 @@
 
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	t_list	*head;
-	t_list	*temp;
-	void	*res;
-	int		index;
+	t_list	*list;
+	t_list	*node;
+	t_list	*tmp;
+	void	*result;
 
-	if (!lst || !f || !del)
+	if (lst == NULL || f == NULL || del == NULL)
 		return (NULL);
-	head = NULL;
-	while (lst)
+	tmp = lst;
+	node = NULL;
+	list = NULL;
+	while (tmp != NULL)
 	{
-		res = f(lst->content);
-		temp = ft_lstnew(res, &index);
-		index++;
-		if (!temp)
+		result = f(tmp->content);
+		node = ft_lstnew(result);
+		if (node == NULL)
 		{
-			del(res);
-			ft_lstclear(&head, del);
+			del(result);
+			ft_lstclear(&list, del);
 			return (NULL);
 		}
-		lst = lst->next;
-		ft_lstadd_back(&head, temp);
+		ft_lstadd_back(&list, node);
+		tmp = tmp->next;
 	}
-	return (head);
+	return (list);
 }
