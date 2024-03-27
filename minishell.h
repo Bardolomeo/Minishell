@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/26 12:01:32 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/27 17:51:07 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@
 # include <sys/wait.h>
 # include <pthread.h>
 
+int g_exit_status = 0;
+
 # define RED "\001\x1b[1;31m\002"
 # define WHITE "\001\x1b[1;0m\002"
 
@@ -51,7 +53,7 @@ typedef struct s_cmd
 {
 	t_simcmd    cmd;
     int         fd[2];
-
+    pid_t       pid;
 } t_cmd;
 
 // typedef struct s_cmdline

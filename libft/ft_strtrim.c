@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 13:52:04 by mtani             #+#    #+#             */
-/*   Updated: 2023/10/20 16:49:36 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/27 16:05:40 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 		begin++;
 	while (end > begin && ft_check_set(s1[end], set) == 1)
 		end--;
-	trimmed = (char *)malloc(((end - begin) * sizeof(char)) + 2);
+	trimmed = (char *)ft_malloc(((end - begin) * sizeof(char)) + 2);
 	if (trimmed == NULL)
 		return (NULL);
 	while (begin < (end + 1))

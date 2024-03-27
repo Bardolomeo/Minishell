@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:26:07 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/26 11:54:22 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/27 16:36:32 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	ft_unsetenv(char *arg, t_shell *shell)
 
 	i = 0;
 	j = 0;
-	new_env = (char **)malloc(sizeof(char *) * (ft_arrlen(shell->my_env) + 1));
+	new_env = (char **)ft_malloc(sizeof(char *) * (ft_arrlen(shell->my_env) + 1));
 	if (!new_env)
 		exit(1);
 	while (shell->my_env[i])
@@ -43,7 +43,6 @@ static void	ft_unsetenv(char *arg, t_shell *shell)
 		i++;
 	}
 	new_env[j] = NULL;
-	ft_free_array(shell->my_env);
 	shell->my_env = new_env;
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 15:24:10 by mtani             #+#    #+#             */
-/*   Updated: 2023/10/18 15:01:36 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/27 16:06:01 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	long long	result;
 
 	if (nmemb == 0 || size == 0)
-		return (malloc(0));
+		return (ft_malloc(0));
 	result = (long long)nmemb * (long long)size;
 	if (result > 4294967295)
 		return (NULL);
-	tmp = (void *)malloc(nmemb * size);
+	tmp = (void *)ft_malloc(nmemb * size);
 	if (tmp == NULL)
 		return (NULL);
 	ft_bzero(tmp, size * nmemb);

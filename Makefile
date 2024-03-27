@@ -6,11 +6,12 @@
 #    By: mtani <mtani@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/03/26 11:56:52 by mtani            ###   ########.fr        #
+#    Updated: 2024/03/27 16:49:15 by mtani            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS	= main.c ft_cd.c ft_pwd.c ft_echo.c ft_env.c ft_export.c ft_unset.c ft_exec.c garbage_collector.c
+SRCS	= main.c ft_exec.c garbage_collector.c \
+	./builtins/ft_cd.c ./builtins/ft_pwd.c ./builtins/ft_echo.c ./builtins/ft_env.c ./builtins/ft_export.c ./builtins/ft_unset.c
 
 LFLAGS = -lft -lreadline
 

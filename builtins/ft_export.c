@@ -6,24 +6,11 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:58 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/26 15:55:59 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/27 16:15:33 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_str(t_str *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != NULL)
-	{
-		free(str[i]);
-		i++;
-	}
-	free(str);
-}
 
 void	add_env(t_shell *shell, char *key, char *value)
 {
@@ -35,7 +22,6 @@ void	add_env(t_shell *shell, char *key, char *value)
 	{
 		if (ft_strncmp(shell->my_env[i], key, ft_strlen(key)) == 0)
 		{
-			free(shell->my_env[i]);
 			shell->my_env[i] = ft_strjoin(key, "=");
 			shell->my_env[i] = ft_strjoin(shell->my_env[i], value);
 			return ;
@@ -73,7 +59,6 @@ void	ft_export(t_shell *shell)
 			if (env[1] == NULL)
 				env[1] = ft_strdup("");
 			add_env(shell, env[0], env[1]);
-			free_str(env);
 		}
 		else
 			add_env(shell, shell->args[i], "");

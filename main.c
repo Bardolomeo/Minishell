@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/26 12:06:43 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/27 16:46:31 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ int main(int argc, char **argv, char **env)
 			shell->args = ft_split(shell->input, ' ');
 			if (ft_strncmp(shell->args[0], "exit", 4) == 0)
 			{
-				ft_free_array(shell->args);
-				free(shell->input);
 				clear_garbage();
 				exit(0);
 			}
@@ -72,7 +70,6 @@ int main(int argc, char **argv, char **env)
 				ft_unset(shell);
 			else
 				ft_exec(shell);
-			ft_free_array(shell->args);
 		}
 		free(shell->input);
 		shell->input = readline(RED "minishell$ " WHITE);
