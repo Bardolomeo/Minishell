@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/27 16:46:31 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:48:36 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,16 @@ int main(int argc, char **argv, char **env)
 	shell = (t_shell *)ft_malloc(sizeof(t_shell));
 	if (shell == NULL)
 		return (1);
-	shell->my_env = ft_strdup_array(env);
+	shell->my_env = ft_myenv();
+	*(shell->my_env) = ft_strdup_array(env);
 	shell->input = readline(RED "minishell$ " WHITE);
 	while (shell->input)
 	{
-		shell->my_env = ft_strdup_array(shell->my_env);
+		*(shell->my_env) = ft_strdup_array(*(shell->my_env));
 		if (ft_strlen(shell->input) > 0)
 		{
 			add_history(shell->input);
+			ft_lexer(shell);
 			shell->args = ft_split(shell->input, ' ');
 			if (ft_strncmp(shell->args[0], "exit", 4) == 0)
 			{
@@ -71,7 +73,7 @@ int main(int argc, char **argv, char **env)
 			else
 				ft_exec(shell);
 		}
-		free(shell->input);
+		// free(shell->input);
 		shell->input = readline(RED "minishell$ " WHITE);
 	}
 }

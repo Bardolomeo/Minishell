@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/27 17:51:07 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:29:50 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@
 # include <sys/wait.h>
 # include <pthread.h>
 
-int g_exit_status = 0;
 
 # define RED "\001\x1b[1;31m\002"
 # define WHITE "\001\x1b[1;0m\002"
+//static int g_exit_status = 0;
 
 typedef char *t_str;
 
@@ -67,7 +67,7 @@ typedef struct s_shell
     char        *input;
 	char		**args;
     t_cmd       *cmd_table;
-    char        **my_env;
+    char        ***my_env;
 } t_shell;
 
 // Builtins
@@ -85,6 +85,10 @@ void	ft_exec(t_shell *shell);
 void	*ft_malloc(size_t size);
 void	clear_garbage(void);
 t_list	**garbage_collector(void);
+char    ***ft_myenv(void);
 void	ft_free_array(char **array);
 
+// utils
+char    *ft_getenv(char *str);
+void	ft_lexer(t_shell *shell);
 #endif

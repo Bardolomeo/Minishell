@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_malloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mint <mint@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:58:22 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/27 15:59:21 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/27 15:39:30 by mint             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,4 @@ void *ft_malloc(size_t size)
 	node = ft_lstnew(ptr);
 	ft_lstadd_front(garbage_collector(), node);
 	return (ptr);
-}
-
-t_list **garbage_collector()
-{
-	static t_list *garb_static = NULL;
-
-	return (&garb_static);
 }

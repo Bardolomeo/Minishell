@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   ft_singletons.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gsapio <gsapio@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/26 10:25:52 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/27 18:13:49 by gsapio           ###   ########.fr       */
+/*   Created: 2024/03/27 17:32:13 by gsapio            #+#    #+#             */
+/*   Updated: 2024/03/27 18:15:16 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	ft_env(t_shell *shell)
+t_list **garbage_collector(void)
 {
-	int		i;
+	static t_list *garb_static = NULL;
+	return (&garb_static);
+}
 
-	i = 0;
-	while ((*shell->my_env)[i])
-	{
-		ft_putendl_fd((*shell->my_env)[i], 1);
-		i++;
-	}
+char ***ft_myenv(void)
+{
+    static char **env = NULL;
+    return(&env);
 }

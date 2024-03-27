@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:26:07 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/27 16:36:32 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/27 18:14:09 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,20 @@ static void	ft_unsetenv(char *arg, t_shell *shell)
 
 	i = 0;
 	j = 0;
-	new_env = (char **)ft_malloc(sizeof(char *) * (ft_arrlen(shell->my_env) + 1));
+	new_env = (char **)ft_malloc(sizeof(char *) * (ft_arrlen(*(shell->my_env)) + 1));
 	if (!new_env)
 		exit(1);
-	while (shell->my_env[i])
+	while ((*shell->my_env)[i])
 	{
-		if (ft_strncmp(shell->my_env[i], arg, ft_strlen(arg)))
+		if (ft_strncmp((*shell->my_env)[i], arg, ft_strlen(arg)))
 		{
-			new_env[j] = ft_strdup(shell->my_env[i]);
+			new_env[j] = ft_strdup((*shell->my_env)[i]);
 			j++;
 		}
 		i++;
 	}
 	new_env[j] = NULL;
-	shell->my_env = new_env;
+	*(shell->my_env) = new_env;
 }
 
 void	ft_unset(t_shell *shell)
