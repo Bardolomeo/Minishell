@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it>       +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/27 18:29:50 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/03/28 19:17:11 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@
 
 # define RED "\001\x1b[1;31m\002"
 # define WHITE "\001\x1b[1;0m\002"
-//static int g_exit_status = 0;
+extern int g_exit_status;
 
 typedef char *t_str;
 
@@ -89,6 +89,7 @@ char    ***ft_myenv(void);
 void	ft_free_array(char **array);
 
 // utils
-char    *ft_getenv(char *str);
+char    *ft_getenv(char *str, int flag);
 void	ft_lexer(t_shell *shell);
+void    ft_exit(int exit_code, char *str);
 #endif

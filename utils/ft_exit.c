@@ -1,36 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/26 10:25:42 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/28 16:23:53 by mtani            ###   ########.fr       */
+/*   Created: 2024/03/28 17:44:42 by mtani             #+#    #+#             */
+/*   Updated: 2024/03/28 18:56:15 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	ft_echo(t_shell *shell)
+void ft_exit(int exit_status, char *str)
 {
-	int		i;
-	int		n_flag;
-
-	i = 1;
-	n_flag = 0;
-	if (shell->args[1] && !ft_strncmp(shell->args[1], "-n", 2))
-	{
-		n_flag = 1;
-		i++;
-	}
-	while (shell->args[i])
-	{
-		ft_putstr_fd(shell->args[i], 1);
-		if (shell->args[i + 1])
-			ft_putchar_fd(' ', 1);
-		i++;
-	}
-	if (!n_flag)
-		ft_putchar_fd('\n', 1);
+    if (str == NULL)
+        perror("minishell");
+    else
+        ft_putstr_fd(str, 2);
+    g_exit_status = exit_status;
+    ft_putnbr_fd(g_exit_status, 2);
+    write(1, "\n", 1);
 }

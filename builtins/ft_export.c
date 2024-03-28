@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it>       +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:58 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/27 18:14:06 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/03/28 16:18:23 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,11 @@ void	ft_export(t_shell *shell)
 			j++;
 		if (shell->args[i][j] == '=')
 		{
+			// TODO: Swap split with altsplit
 			env = ft_split(shell->args[i], '=');
 			if (env[1] == NULL)
 				env[1] = ft_strdup("");
+			env[1] = ft_strtrim(env[1], "\"");
 			add_env(shell, env[0], env[1]);
 		}
 		else

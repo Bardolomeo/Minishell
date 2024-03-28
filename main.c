@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it>       +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/27 18:48:36 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/03/28 19:54:52 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int g_exit_status;
 
 char	**ft_strdup_array(char **array)
 {
@@ -39,6 +41,7 @@ int main(int argc, char **argv, char **env)
 
 	argc += 0;
 	argv += 0;
+	g_exit_status = 0;
 	shell = (t_shell *)ft_malloc(sizeof(t_shell));
 	if (shell == NULL)
 		return (1);
@@ -52,26 +55,29 @@ int main(int argc, char **argv, char **env)
 		{
 			add_history(shell->input);
 			ft_lexer(shell);
-			shell->args = ft_split(shell->input, ' ');
-			if (ft_strncmp(shell->args[0], "exit", 4) == 0)
+			if (shell->input)
 			{
-				clear_garbage();
-				exit(0);
+				shell->args = ft_split(shell->input, ' ');
+				if (ft_strncmp(shell->args[0], "exit", 4) == 0)
+				{
+					clear_garbage();
+					exit(g_exit_status);
+				}
+				else if (ft_strncmp(shell->args[0], "cd", 2) == 0)
+					ft_cd(shell);
+				else if (ft_strncmp(shell->args[0], "pwd", 3) == 0)
+					ft_pwd();
+				else if (ft_strncmp(shell->args[0], "echo", 4) == 0)
+					ft_echo(shell);
+				else if (ft_strncmp(shell->args[0], "env", 3) == 0)
+					ft_env(shell);
+				else if (ft_strncmp(shell->args[0], "export", 6) == 0)
+					ft_export(shell);
+				else if (ft_strncmp(shell->args[0], "unset", 5) == 0)
+					ft_unset(shell);
+				else
+					ft_exec(shell);
 			}
-			else if (ft_strncmp(shell->args[0], "cd", 2) == 0)
-				ft_cd(shell);
-			else if (ft_strncmp(shell->args[0], "pwd", 3) == 0)
-				ft_pwd();
-			else if (ft_strncmp(shell->args[0], "echo", 4) == 0)
-				ft_echo(shell);
-			else if (ft_strncmp(shell->args[0], "env", 3) == 0)
-				ft_env(shell);
-			else if (ft_strncmp(shell->args[0], "export", 6) == 0)
-				ft_export(shell);
-			else if (ft_strncmp(shell->args[0], "unset", 5) == 0)
-				ft_unset(shell);
-			else
-				ft_exec(shell);
 		}
 		// free(shell->input);
 		shell->input = readline(RED "minishell$ " WHITE);

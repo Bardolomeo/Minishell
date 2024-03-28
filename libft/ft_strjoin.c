@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/11 11:12:33 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/27 16:05:13 by mtani            ###   ########.fr       */
+/*   Updated: 2024/03/28 15:08:09 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	s1_len;
 	size_t	s2_len;
 
+	if (s2 == NULL)
+		return ((char *)s1);
+	if (s1 == NULL)
+		return ((char *)s2);
+	if (s1 == NULL && s2 == NULL)
+		return (NULL);
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
 	join = (char *)ft_malloc(sizeof(char) * ((s1_len + s2_len) + 1));
