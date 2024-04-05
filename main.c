@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/28 19:54:52 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/05 14:18:10 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,18 @@ char	**ft_strdup_array(char **array)
 	return (new_array);
 }
 
+void	print_args(char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args[i])
+	{
+		printf("args[%d]: %s\n", i, args[i]);
+		i++;
+	}
+}
+
 int main(int argc, char **argv, char **env)
 {
 	t_shell	*shell;
@@ -57,16 +69,26 @@ int main(int argc, char **argv, char **env)
 			ft_lexer(shell);
 			if (shell->input)
 			{
-				shell->args = ft_split(shell->input, ' ');
+				shell->args = ft_altsplit(shell->input, ' ');
 				if (ft_strncmp(shell->args[0], "exit", 4) == 0)
 				{
-					clear_garbage();
-					exit(g_exit_status);
+					if (shell->args[2])
+					{
+						ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+						g_exit_status = 1;
+					}
+					else
+					{
+						if (shell->args[1])
+							g_exit_status = ft_atoi(shell->args[1]);
+						clear_garbage();
+						exit(g_exit_status);
+					}
 				}
 				else if (ft_strncmp(shell->args[0], "cd", 2) == 0)
 					ft_cd(shell);
 				else if (ft_strncmp(shell->args[0], "pwd", 3) == 0)
-					ft_pwd();
+					ft_pwd(shell);
 				else if (ft_strncmp(shell->args[0], "echo", 4) == 0)
 					ft_echo(shell);
 				else if (ft_strncmp(shell->args[0], "env", 3) == 0)

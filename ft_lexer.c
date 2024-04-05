@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/28 19:59:21 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/05 11:02:06 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void    expand_wo_brackets(char *str, int *i, char **tmp2, int *flag)
     *flag = fill_input(str, i, tmp2, 0);
     while (str[*i] && str[*i] != ' ')
     {
-        if (str[*i + 1] == '$')
+        if (str[*i + 1] == '$' || str[*i + 1] == '\'' || str[*i + 1] == '\"' || str[*i + 1] == '|' || str[*i + 1] == ';' || str[*i + 1] == '>' || str[*i + 1] == '<' || str[*i + 1] == '&' || str[*i + 1] == '(' || str[*i + 1] == ')' || str[*i + 1] == '`' || str[*i + 1] == '\0')
         {
             (*i)++;
             break ;
@@ -102,11 +102,13 @@ void    expander(t_shell *shell)
     int i;
     int flag;
     int squotes;
+	int dquotes;
     char *tmp2;
 
 
     flag = 0;
     squotes = 0;
+	dquotes = 0;
     i = 0;
     tmp2 = NULL;
     while (shell->input[i])
@@ -115,7 +117,11 @@ void    expander(t_shell *shell)
             squotes = 1;
         else if (shell->input[i] == '\'' && squotes == 1)
             squotes = 0;
-        if (shell->input[i] == '$' && squotes == 0 && shell->input[i + 1] != '\0' && shell->input[i + 1] != ' ')
+		if (shell->input[i] == '\"' && dquotes == 0)
+			dquotes = 1;
+		else if (shell->input[i] == '\"' && dquotes == 1)
+			dquotes = 0;
+        if (shell->input[i] == '$' && (squotes == 0 || dquotes == 1) && shell->input[i + 1] != '\0' && shell->input[i + 1] != ' ')
         {
             if (shell->input[i + 1] == '{')
                 handle_brackets(shell->input, &i, &flag, &tmp2);
@@ -135,7 +141,9 @@ void    expander(t_shell *shell)
 void	ft_lexer(t_shell *shell)
 {
     // char    **mtx;
+	int i;
 
+	i = 0;
     expander(shell);
     // mtx = ft_split(shell->input, '|');
 }

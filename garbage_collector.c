@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:04 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/27 16:36:30 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/05 13:20:48 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,5 @@ void	clear_garbage()
 		node = tmp;
 	}
 	*garbage_collector() = NULL;
+	rl_clear_history();
 }

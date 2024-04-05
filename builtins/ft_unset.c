@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it>       +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:26:07 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/27 18:14:09 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/05 14:25:08 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ void	ft_unset(t_shell *shell)
 	int		i;
 
 	i = 0;
+	if (!shell->args[1])
+	{
+		ft_putendl_fd("minishell: unset: not enough arguments", 2);
+		return ;
+	}
 	while (shell->args[i])
 	{
 		if (ft_strchr(shell->args[i], '='))

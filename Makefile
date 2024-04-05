@@ -6,11 +6,11 @@
 #    By: mtani <mtani@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/03/28 17:46:37 by mtani            ###   ########.fr        #
+#    Updated: 2024/04/05 10:26:39 by mtani            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS	= main.c ft_exec.c garbage_collector.c ft_lexer.c\
+SRCS	= main.c ft_exec.c garbage_collector.c ft_lexer.c ft_altsplit.c ft_find_functions.c \
 	./builtins/ft_cd.c ./builtins/ft_pwd.c ./builtins/ft_echo.c ./builtins/ft_env.c ./builtins/ft_export.c ./builtins/ft_unset.c \
 	./utils/ft_singletons.c ./utils/ft_exit.c
 

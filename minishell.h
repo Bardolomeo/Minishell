@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/03/28 19:17:11 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/05 14:00:46 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,8 @@ typedef struct s_shell
 } t_shell;
 
 // Builtins
-
 void	ft_cd(t_shell *shell);
-void	ft_pwd(void);
+void	ft_pwd(t_shell *shell);
 void	ft_echo(t_shell *shell);
 void	ft_env(t_shell *shell);
 void	ft_export(t_shell *shell);
@@ -81,7 +80,6 @@ void	ft_unset(t_shell *shell);
 void	ft_exec(t_shell *shell);
 
 // Garbage collector
-
 void	*ft_malloc(size_t size);
 void	clear_garbage(void);
 t_list	**garbage_collector(void);
@@ -92,4 +90,11 @@ void	ft_free_array(char **array);
 char    *ft_getenv(char *str, int flag);
 void	ft_lexer(t_shell *shell);
 void    ft_exit(int exit_code, char *str);
+
+// altsplit
+char	**ft_altsplit(char *s, char c);
+char	find_quotetype(const char *s, size_t i, char quote);
+int		find_unquoted(const char *s, char c, size_t start);
+int		find_quoted(const char *s, char quote, size_t start);
+
 #endif
