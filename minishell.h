@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/05 14:00:46 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/06 16:03:20 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,12 @@ void	ft_free_array(char **array);
 
 // utils
 char    *ft_getenv(char *str, int flag);
-void	ft_lexer(t_shell *shell);
 void    ft_exit(int exit_code, char *str);
+
+// lexer and expnader
+void	ft_lexer(t_shell *shell);
+void    question_mark_handler(char *str, int *index, char **tmp2, int brack_flag);
+int	    is_reserved(char ch);
 
 // altsplit
 char	**ft_altsplit(char *s, char c);
