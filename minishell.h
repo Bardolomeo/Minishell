@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/06 16:03:20 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/09 17:42:09 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void    ft_exit(int exit_code, char *str);
 
 // lexer and expnader
 void	ft_lexer(t_shell *shell);
-void    question_mark_handler(char *str, int *index, char **tmp2, int brack_flag);
+int    question_mark_handler(char *str, int *index, char **tmp2, int brack_flag);
 int	    is_reserved(char ch);
 
 // altsplit

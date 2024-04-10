@@ -6,13 +6,13 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 14:26:52 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/06 16:00:42 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/09 17:58:30 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
+int	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
 {
 	char *str_exit_st;
 
@@ -21,20 +21,28 @@ void	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
 		str_exit_st = ft_itoa(g_exit_status);
 		*tmp2 = ft_strjoin(*tmp2, str_exit_st);
 		(*index) += 2;
+		return (1);
 	}
-	else if (str[*index + 1] == '?' && brack_flag == 1)
+	else if (brack_flag == 1)
 	{
-		if (str[*index + 2] == '}')
+		if (str[*index + 2] == '?' && str[*index + 3] == '}')
 		{
-			*tmp2 = ft_strjoin(*tmp2, ft_itoa(g_exit_status));
-			(*index) += 2;
+			str_exit_st = ft_itoa(g_exit_status);
+			*tmp2 = ft_strjoin(*tmp2, str_exit_st);
+			(*index) += 4;
+			return (1);
+		}
+		else
+		{
+			ft_exit(1, "minishell: ? : bad sostitution");
 		}
 	}
+	return (0);
 }
 
 int	is_reserved(char ch)
 {
-	if (ch == '>' || ch == '<' || ch == '|')
+	if (ch == '>' || ch == '<' || ch == '|' || ch == '=')
 		return (1);
 	return (0);
 }

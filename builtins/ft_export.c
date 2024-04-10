@@ -3,14 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:58 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/05 11:43:23 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/09 16:27:06 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
+
+//export senza argomenti restituisce la lista delle variabili
+void	export_no_args(t_shell *shell)
+{
+	int		i;
+
+	i = 0;
+	while ((*shell->my_env)[i])
+	{
+		ft_putstr_fd("declare -x ", 1);
+		ft_putstr_fd((*shell->my_env)[i] , 1);
+		ft_putchar_fd('\n', 1);
+		i++;
+	}
+}
+
+//"export hello" setta la variabile hello a vuoto, NON visibile con env
+void	add_empty_env(char *env, char ***my_env)
+{
+	int 	i;
+
+	i = 0;
+	while ((*my_env)[i] != NULL)
+	{
+		if (ft_strncmp((*my_env)[i], env, ft_strlen(env)) == 0)
+			return ;
+		i++;
+	}
+	(*my_env)[i] = ft_strdup(env);
+	(*my_env)[i + 1] = NULL;
+}
 
 void	add_env(t_shell *shell, char *key, char *value)
 {
@@ -41,37 +72,46 @@ void	add_env(t_shell *shell, char *key, char *value)
 	*(shell->my_env) = new_env;
 }
 
+int	export_not_empty(char *arg, t_shell *shell, int i, int j)
+{
+	t_str	*env;
+
+	if (arg[j] == '\0' || arg[j - 1] == ' '  || arg[j - 1] == '\0')
+	{
+		ft_putstr_fd("minishell: export: ", 2);
+		ft_putstr_fd(shell->args[i], 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+		g_exit_status = 1;
+		return (1);
+	}
+	env = ft_altsplit(arg, '=');
+	if (env[1] == NULL)
+		env[1] = ft_strdup("");
+	env[1] = ft_strtrim(env[1], "\"");
+	add_env(shell, env[0], env[1]);
+	return (0);
+}
+
 void	ft_export(t_shell *shell)
 {
 	int		i;
 	int		j;
-	t_str	*env;
+	t_str	arg;
 
-	i = 1;
-	while (shell->args[i] != NULL)
+	if (shell->args[1] == NULL)
+		export_no_args(shell);
+	i = 0;
+	while (shell->args[++i] != NULL)
 	{
 		j = 0;
-		while (shell->args[i][j] != '\0' && shell->args[i][j] != '=')
+		arg = ft_strdup(shell->args[i]);
+		while (arg[j] != '\0' && arg[j] != '=')
 			j++;
-		if ((shell->args[i][j] == '\0' && shell->args[i][j - 1] == '=') || shell->args[i][j + 1] == ' ' || shell->args[i][j + 1] == '\0' || shell->args[i][j - 1] == ' ' )
+		if (arg[j] == '\0' && arg[j - 1] != '=')
 		{
-			ft_putstr_fd("minishell: export: `=", 2);
-			ft_putstr_fd(shell->args[i], 2);
-			ft_putstr_fd("': not a valid identifier\n", 2);
-			g_exit_status = 1;
-			return ;
+			add_empty_env(arg, shell->my_env);
+			continue ;
 		}
-		if (shell->args[i][j] == '=')
-		{
-			env = ft_altsplit(shell->args[i], '=');
-			if (env[1] == NULL)
-				env[1] = ft_strdup("");
-			env[1] = ft_strtrim(env[1], "\"");
-			add_env(shell, env[0], env[1]);
-			break ;
-		}
-		else
-			add_env(shell, shell->args[i], "");
-		i++;
+	export_not_empty(arg, shell, i, j);
 	}
 }

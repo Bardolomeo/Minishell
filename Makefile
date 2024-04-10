@@ -6,7 +6,7 @@
 #    By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/04/06 15:59:09 by gsapio           ###   ########.fr        #
+#    Updated: 2024/04/09 15:51:55 by gsapio           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ OBJS	= $(SRCS:.c=.o)
 
 HEADER			= ./
 
-CC				= cc -g
+CC				= cc -g -no-pie
 
 RM				= rm -f
 

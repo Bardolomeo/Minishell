@@ -6,13 +6,13 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/06 16:01:51 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/09 17:53:48 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char    *ft_getenv(char *str, int flag)
+char    *ft_getenv(char *str, int bra_flag)
 {
 	int     i;
 	int     len;
@@ -21,11 +21,11 @@ char    *ft_getenv(char *str, int flag)
 	myenv = *ft_myenv();
 	len = 0;
 	i = -1;
-	while (myenv[++i] && *str != '\"' && *str != '\'' && *str != '`' && *str != '|' && *str != ';' && *str != '>' && *str != '<' && *str != '&' && *str != '(' && *str != ')' && *str != '\0')
+	while (myenv[++i] && *str != '\"' && *str != '\'' && !is_reserved(*str) && *str!= '\0' && *str != ' ')
 	{
-		if (flag == 0)
+		if (bra_flag == 0)
 		{
-			while (str[len] && str[len] != ' ' && str[len] != '$' && str[len] != '\'' && str[len] != '\"' && str[len] != '|' && str[len] != ';' && str[len] != '>' && str[len] != '<' && str[len] != '&' && str[len] != '(' && str[len] != ')' && str[len] != '`' && str[len] != '\0')
+			while (str[len] && str[len] != ' ' && !is_reserved(str[len]) && str[len] != '\0')
 				len++;
 		}
 		else
@@ -39,33 +39,34 @@ char    *ft_getenv(char *str, int flag)
 	return (NULL);
 }
 
-int     fill_input(char *str, int *i, char **tmp2, int flag)
+int     fill_input(char *str, int *i, char **tmp2, int bra_flag)
 {
 	char *tmp;
 	char *tmpenv;
 
 	tmp = NULL;
-	question_mark_handler(str, i, tmp2, flag);
-	tmpenv = ft_getenv(str + *i + 1, flag);
+	tmpenv = ft_getenv(str + *i + 1, bra_flag);
 	if (tmpenv)
 	{
 		if (*tmp2 == NULL)
 		{
 			tmp = ft_substr(str, 0, *i);
-			*tmp2 = ft_strjoin(tmp, ft_getenv(str + *i + 1, flag));
+			*tmp2 = ft_strjoin(tmp, ft_getenv(str + *i + 1, bra_flag));
 		}
 		else
-			*tmp2 = ft_strjoin(*tmp2, ft_getenv(str + *i + 1, flag));
+			*tmp2 = ft_strjoin(*tmp2, ft_getenv(str + *i + 1, bra_flag));
 	}
 	return (1);
 }
 
-void	expand_wo_brackets(char *str, int *i, char **tmp2, int *flag)
+void	expand_wo_brackets(char *str, int *i, char **tmp2, int *bra_flag)
 {
-	*flag = fill_input(str, i, tmp2, 0);
+	if (question_mark_handler(str, i, tmp2, 0))
+		return ;
+	*bra_flag = fill_input(str, i, tmp2, 0);
 	while (str[*i] && str[*i] != ' ')
 	{
-		if (str[*i + 1] == '$' || str[*i + 1] == '\'' || str[*i + 1] == '\"' || str[*i + 1] == '|' || str[*i + 1] == ';' || str[*i + 1] == '>' || str[*i + 1] == '<' || str[*i + 1] == '&' || str[*i + 1] == '(' || str[*i + 1] == ')' || str[*i + 1] == '`' || str[*i + 1] == '\0')
+		if (str[*i + 1] == '$' || str[*i + 1] == '\'' || str[*i + 1] == '\"' || is_reserved(str[*i + 1]) || str[*i + 1] == '\0')
 		{
 			(*i)++;
 			break ;
@@ -74,7 +75,7 @@ void	expand_wo_brackets(char *str, int *i, char **tmp2, int *flag)
 	}
 }
 
-void     handle_brackets(char *str, int *index, int *flag, char **tmp2)
+void     handle_brackets(char *str, int *index, int *bra_flag, char **tmp2)
 {
 	int i;
 	int j;
@@ -92,7 +93,9 @@ void     handle_brackets(char *str, int *index, int *flag, char **tmp2)
 		return ;
 	}
 	i = *index + 1;
-	*flag = fill_input(str, &i, tmp2, 1);
+	if (question_mark_handler(str, index, tmp2, 1))
+		return ;
+	*bra_flag = fill_input(str, &i, tmp2, 1);
 	while (str[*index] && str[*index] != '}')
 		(*index)++;
 	(*index)++;
@@ -101,12 +104,12 @@ void     handle_brackets(char *str, int *index, int *flag, char **tmp2)
 void    expander(t_shell *shell)
 {
 	int		i;
-	int		flag;
+	int		bra_flag;
 	int		squotes;
 	int 	dquotes;
 	char	*tmp2;
 
-	flag = 0;
+	bra_flag = 0;
 	squotes = 0;
 	dquotes = 0;
 	i = 0;
@@ -126,9 +129,9 @@ void    expander(t_shell *shell)
 			!is_reserved(shell->input[i + 1]))
 		{
 			if (shell->input[i + 1] == '{')
-				handle_brackets(shell->input, &i, &flag, &tmp2);
+				handle_brackets(shell->input, &i, &bra_flag, &tmp2);
 			else
-				expand_wo_brackets(shell->input, &i, &tmp2, &flag);
+				expand_wo_brackets(shell->input, &i, &tmp2, &bra_flag);
 		}
 		else
 		{
@@ -136,14 +139,14 @@ void    expander(t_shell *shell)
 			i++;
 		}
 	}
-	if (flag)
-		shell->input = tmp2;
+	// if (bra_flag) a che serviva questa flag?
+	shell->input = tmp2;
 }
 
 void	ft_lexer(t_shell *shell)
 {
-	int i;
+	// int i;
 
-	i = 0;
+	// i = 0;
 	expander(shell);
 }
