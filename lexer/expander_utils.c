@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 14:26:52 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/09 17:58:30 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/10 18:38:30 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
 
 	if (str[*index + 1] == '?' && brack_flag == 0)
 	{
+		printf("%s\n", ft_itoa(g_exit_status));
 		str_exit_st = ft_itoa(g_exit_status);
 		*tmp2 = ft_strjoin(*tmp2, str_exit_st);
 		(*index) += 2;
