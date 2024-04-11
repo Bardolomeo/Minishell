@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:11:44 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/09 13:17:08 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/11 15:51:54 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ static char	*ft_make_altstring(char const *s, size_t start, char c, char quote)
 		return (NULL);
 	while (i < str_len)
 	{
-		if (s[start] == '"' && dquotes == 0)
+		if (s[start] == '"' && dquotes == 0 && squotes == 0)
 			dquotes = 1;
 		else if (s[start] == '"' && dquotes == 1)
 			dquotes = 0;
-		if (s[start] == '\'' && squotes == 0)
+		if (s[start] == '\'' && squotes == 0 && dquotes == 0)
 			squotes = 1;
 		else if (s[start] == '\'' && squotes == 1)
 			squotes = 0;

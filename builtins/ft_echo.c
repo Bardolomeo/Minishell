@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:42 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/28 16:23:53 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/11 15:33:45 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,5 @@ void	ft_echo(t_shell *shell)
 	}
 	if (!n_flag)
 		ft_putchar_fd('\n', 1);
+	g_exit_status = 0;
 }

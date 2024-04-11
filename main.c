@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/05 14:18:10 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/11 15:46:36 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,9 @@ int main(int argc, char **argv, char **env)
 			ft_lexer(shell);
 			if (shell->input)
 			{
+				//echo '$a'$a'' non funziona
 				shell->args = ft_altsplit(shell->input, ' ');
+				print_args(shell->args);
 				if (ft_strncmp(shell->args[0], "exit", 4) == 0)
 				{
 					if (shell->args[2])
@@ -81,6 +83,7 @@ int main(int argc, char **argv, char **env)
 					{
 						if (shell->args[1])
 							g_exit_status = ft_atoi(shell->args[1]);
+						printf("exit status: %d\n", g_exit_status);
 						clear_garbage();
 						exit(g_exit_status);
 					}
@@ -101,7 +104,6 @@ int main(int argc, char **argv, char **env)
 					ft_exec(shell);
 			}
 		}
-		// free(shell->input);
 		shell->input = readline(RED "minishell$ " WHITE);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:38:12 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/10 18:52:39 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/11 15:32:57 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ void	ft_exec(t_shell *shell)
 		perror(RED "minishell$ " WHITE);
 	else
 	{
-		//implementare wait3 per gestire lo status
-		waitpid(pid, &status, 0);
+		wait4(pid, &status, WUNTRACED, NULL);
+		if (WIFEXITED(status))
+		{
+			g_exit_status = WEXITSTATUS(status);
+		}
 	}
 }

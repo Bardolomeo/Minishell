@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/09 17:53:48 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/11 15:43:50 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char    *ft_getenv(char *str, int bra_flag)
 	{
 		if (bra_flag == 0)
 		{
-			while (str[len] && str[len] != ' ' && !is_reserved(str[len]) && str[len] != '\0')
+			while (str[len] && str[len] != ' ' && !is_reserved(str[len]) && str[len] != '\0' && str[len] != '\"' && str[len] != '\'')
 				len++;
 		}
 		else
@@ -59,10 +59,10 @@ int     fill_input(char *str, int *i, char **tmp2, int bra_flag)
 	return (1);
 }
 
-void	expand_wo_brackets(char *str, int *i, char **tmp2, int *bra_flag)
+int	expand_wo_brackets(char *str, int *i, char **tmp2, int *bra_flag)
 {
 	if (question_mark_handler(str, i, tmp2, 0))
-		return ;
+		return (0);
 	*bra_flag = fill_input(str, i, tmp2, 0);
 	while (str[*i] && str[*i] != ' ')
 	{
@@ -73,9 +73,10 @@ void	expand_wo_brackets(char *str, int *i, char **tmp2, int *bra_flag)
 		}
 		(*i)++;
 	}
+	return (1);
 }
 
-void     handle_brackets(char *str, int *index, int *bra_flag, char **tmp2)
+int     handle_brackets(char *str, int *index, int *bra_flag, char **tmp2)
 {
 	int i;
 	int j;
@@ -89,57 +90,57 @@ void     handle_brackets(char *str, int *index, int *bra_flag, char **tmp2)
 	}
 	if (!str[i])
 	{
-		ft_exit(1, ft_strjoin(str + *index, " : syntax error\n"));
-		return ;
+		ft_exit(1, ft_strjoin(str + *index, " : syntax error"));
+		return (0);
 	}
 	i = *index + 1;
 	if (question_mark_handler(str, index, tmp2, 1))
-		return ;
+		return (0);
 	*bra_flag = fill_input(str, &i, tmp2, 1);
 	while (str[*index] && str[*index] != '}')
 		(*index)++;
 	(*index)++;
+	return (1);
 }
 
 void    expander(t_shell *shell)
 {
 	int		i;
 	int		bra_flag;
-	int		squotes;
-	int 	dquotes;
+	int		quotes[2];
+	int		f_break;
 	char	*tmp2;
 
 	bra_flag = 0;
-	squotes = 0;
-	dquotes = 0;
+	quotes[0] = 0;
+	quotes[1] = 0;
+	f_break = 1;
 	i = 0;
 	tmp2 = NULL;
 	while (shell->input[i])
 	{
-		if (shell->input[i] == '\'' && squotes == 0)
-			squotes = 1;
-		else if (shell->input[i] == '\'' && squotes == 1)
-			squotes = 0;
-		if (shell->input[i] == '\"' && dquotes == 0)
-			dquotes = 1;
-		else if (shell->input[i] == '\"' && dquotes == 1)
-			dquotes = 0;
-		if (shell->input[i] == '$' && (squotes == 0 || dquotes == 1) &&
+		handle_quotes(shell, i, quotes);
+		if (shell->input[i] == '$' && (quotes[0] == 0 || quotes[1] == 1) &&
 			shell->input[i + 1] != '\0' && shell->input[i + 1] != ' ' &&
+			shell->input[i + 1] != '$' &&
 			!is_reserved(shell->input[i + 1]))
 		{
 			if (shell->input[i + 1] == '{')
-				handle_brackets(shell->input, &i, &bra_flag, &tmp2);
+				f_break = handle_brackets(shell->input, &i, &bra_flag, &tmp2);
 			else
-				expand_wo_brackets(shell->input, &i, &tmp2, &bra_flag);
+				f_break = expand_wo_brackets(shell->input, &i, &tmp2, &bra_flag);
 		}
 		else
 		{
 			tmp2 = ft_strjoin(tmp2, ft_substr(shell->input, i, 1));
 			i++;
 		}
+		if (f_break == 0)
+		{
+			shell->input = NULL;
+			return ;
+		}
 	}
-	// if (bra_flag) a che serviva questa flag?
 	shell->input = tmp2;
 }
 

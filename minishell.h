@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/09 17:42:09 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/11 12:28:12 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include <pthread.h>
+# include <sys/resource.h>
 
 
 # define RED "\001\x1b[1;31m\002"
@@ -68,6 +69,7 @@ typedef struct s_shell
 	char		**args;
     t_cmd       *cmd_table;
     char        ***my_env;
+    int         must_break;
 } t_shell;
 
 // Builtins
@@ -93,6 +95,7 @@ void    ft_exit(int exit_code, char *str);
 // lexer and expnader
 void	ft_lexer(t_shell *shell);
 int    question_mark_handler(char *str, int *index, char **tmp2, int brack_flag);
+void	handle_quotes(t_shell *shell, int i, int *quotes);
 int	    is_reserved(char ch);
 
 // altsplit
