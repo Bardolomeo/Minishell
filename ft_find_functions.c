@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_find_functions.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:26:15 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/09 13:17:24 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/11 16:15:57 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,14 @@ int	find_quoted(const char *s, char quote, size_t start)
 	{
 		j++;
 		str_len++;
+	}
+	if (s[j + 1] != '\0' && s[j + 1] != ' ')
+	{
+		while (s[j + 1] != ' ' && s[j + 1] != '\0')
+		{
+			j++;
+			str_len++;
+		}
 	}
 	return (str_len);
 }

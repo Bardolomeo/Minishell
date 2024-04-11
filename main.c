@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/11 15:46:36 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/11 16:18:34 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ int main(int argc, char **argv, char **env)
 			{
 				//echo '$a'$a'' non funziona
 				shell->args = ft_altsplit(shell->input, ' ');
-				print_args(shell->args);
 				if (ft_strncmp(shell->args[0], "exit", 4) == 0)
 				{
 					if (shell->args[2])
