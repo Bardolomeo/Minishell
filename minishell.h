@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/11 12:28:12 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/11 18:17:16 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ typedef struct s_shell
 	char		**args;
     t_cmd       *cmd_table;
     char        ***my_env;
-    int         must_break;
 } t_shell;
 
 // Builtins
@@ -91,6 +90,7 @@ void	ft_free_array(char **array);
 // utils
 char    *ft_getenv(char *str, int flag);
 void    ft_exit(int exit_code, char *str);
+char	*ft_readline(const char *str);
 
 // lexer and expnader
 void	ft_lexer(t_shell *shell);

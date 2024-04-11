@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 14:26:52 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/11 15:36:04 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/11 18:35:09 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
 		str_exit_st = ft_itoa(g_exit_status);
 		*tmp2 = ft_strjoin(*tmp2, str_exit_st);
 		(*index) += 2;
+		return (1);
 	}
 	else if (brack_flag == 1)
 	{
@@ -29,6 +30,7 @@ int	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
 			str_exit_st = ft_itoa(g_exit_status);
 			*tmp2 = ft_strjoin(*tmp2, str_exit_st);
 			(*index) += 4;
+			return (1);
 		}
 		else
 		{

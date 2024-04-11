@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lexer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/11 15:43:50 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/11 18:37:10 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int     fill_input(char *str, int *i, char **tmp2, int bra_flag)
 int	expand_wo_brackets(char *str, int *i, char **tmp2, int *bra_flag)
 {
 	if (question_mark_handler(str, i, tmp2, 0))
-		return (0);
+		return (1);
 	*bra_flag = fill_input(str, i, tmp2, 0);
 	while (str[*i] && str[*i] != ' ')
 	{

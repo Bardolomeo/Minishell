@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/11 16:18:34 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/11 18:16:33 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int main(int argc, char **argv, char **env)
 		return (1);
 	shell->my_env = ft_myenv();
 	*(shell->my_env) = ft_strdup_array(env);
-	shell->input = readline(RED "minishell$ " WHITE);
+	shell->input = ft_readline(RED "minishell$ " WHITE);
 	while (shell->input)
 	{
 		*(shell->my_env) = ft_strdup_array(*(shell->my_env));
@@ -103,6 +103,6 @@ int main(int argc, char **argv, char **env)
 					ft_exec(shell);
 			}
 		}
-		shell->input = readline(RED "minishell$ " WHITE);
+		shell->input = ft_readline(RED "minishell$ " WHITE);
 	}
 }
