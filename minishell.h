@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/12 14:25:38 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/12 16:51:43 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # include <readline/history.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <fcntl.h>
 # include <unistd.h>
 # include <sys/wait.h>
 # include <pthread.h>
@@ -46,14 +47,14 @@ typedef char *t_str;
 
 typedef struct s_simcmd
 {
-    char	*cmd_wargs;
+    char	**cmd_wargs;
 	char    *path;
 } t_simcmd;
 
 typedef struct s_cmd
 {
 	t_simcmd    cmd;
-    int         fd[2];
+    char		io[2][255];
     pid_t       pid;
 } t_cmd;
 
@@ -90,14 +91,18 @@ void	ft_free_array(char **array);
 
 // utils
 char    *ft_getenv(char *str, int flag);
-void    ft_exit(int exit_code, char *str);
+void    ft_error(int exit_code, char *str);
 char	*ft_readline(const char *str);
+int		is_reserved_export(char ch);
 
-// lexer and expnader
+// lexer and expander
 void	ft_lexer(t_shell *shell);
 int    question_mark_handler(char *str, int *index, char **tmp2, int brack_flag);
 void	handle_quotes(t_shell *shell, int i, int *quotes);
-int	    is_reserved_export(char ch);
+int	    is_reserved(char ch);
+
+// parser
+void	ft_parser(t_shell *shell);
 
 // altsplit
 char	**ft_altsplit(char *s, char c);

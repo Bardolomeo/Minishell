@@ -3,17 +3,18 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+         #
+#    By: mtani <mtani@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/04/12 14:26:14 by gsapio           ###   ########.fr        #
+#    Updated: 2024/04/12 16:51:43 by mtani            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS	= main.c ft_exec.c garbage_collector.c ft_altsplit.c ft_find_functions.c \
 	./builtins/ft_cd.c ./builtins/ft_pwd.c ./builtins/ft_echo.c ./builtins/ft_env.c ./builtins/ft_export.c ./builtins/ft_unset.c \
-	./utils/ft_singletons.c ./utils/ft_exit.c ./utils/ft_readline.c utils/is_reserved.c\
-	lexer/ft_lexer.c lexer/expander_utils.c
+	./utils/ft_singletons.c ./utils/ft_error.c ./utils/ft_readline.c utils/is_reserved.c\
+	./lexer/ft_lexer.c ./lexer/expander_utils.c \
+	./parser/ft_parser.c \
 
 LFLAGS = -lft -lreadline
 

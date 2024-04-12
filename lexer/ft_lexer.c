@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lexer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/12 14:30:18 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/12 16:51:43 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int     handle_brackets(char *str, int *index, int *bra_flag, char **tmp2)
 	}
 	if (!str[i])
 	{
-		ft_exit(1, ft_strjoin(str + *index, " : syntax error"));
+		ft_error(1, ft_strjoin(str + *index, " : syntax error"));
 		return (0);
 	}
 	i = *index + 1;

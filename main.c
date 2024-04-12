@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/12 12:06:24 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/12 16:48:49 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int main(int argc, char **argv, char **env)
 		{
 			add_history(shell->input);
 			ft_lexer(shell);
+			ft_parser(shell);
 			if (shell->input)
 			{
 				if (ft_strncmp(shell->args[0], "exit", 4) == 0)
