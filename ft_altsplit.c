@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_altsplit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:11:44 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/11 16:18:15 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/12 14:02:29 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ static size_t	ft_altcount_arr(char const *s, char c)
 	count = 0;
 	in_arr = 0;
 	quote = 0;
+	if (s == NULL)
+		return (0);
 	while (s[i] != '\0')
 	{
 		if ((s[i] == '"' || s[i] == '\'') && quote == 0)
@@ -99,6 +101,8 @@ static char	**ft_make_altsplit(char **array, char const *s, char c)
 	in_arr = 0;
 	arr_index = 0;
 	quote = 0;
+	if (s == NULL)
+		return (NULL);
 	while (s[++i] != '\0')
 	{
 		quote = find_quotetype(s, i, quote);

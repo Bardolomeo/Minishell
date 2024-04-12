@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lexer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/12 13:32:11 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/12 14:30:18 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ char    *ft_getenv(char *str, int bra_flag)
 	myenv = *ft_myenv();
 	len = 0;
 	i = -1;
-	while (myenv[++i] && *str != '\"' && *str != '\'' && !is_reserved(*str) && *str!= '\0' && *str != ' ')
+	while (myenv[++i] && *str != '\"' && *str != '\'' && !is_reserved_export(*str) && *str!= '\0' && *str != ' ')
 	{
 		if (bra_flag == 0)
 		{
-			while (str[len] && str[len] != ' ' && !is_reserved(str[len]) && str[len] != '\0' && str[len] != '\"' && str[len] != '\'')
+			while (str[len] && str[len] != ' ' && str[len] != '$' && !is_reserved_export(str[len]) && str[len] != '\0' && str[len] != '\"' && str[len] != '\'')
 				len++;
 		}
 		else
@@ -61,12 +61,17 @@ int     fill_input(char *str, int *i, char **tmp2, int bra_flag)
 
 int	expand_wo_brackets(char *str, int *i, char **tmp2, int *bra_flag)
 {
-	if (question_mark_handler(str, i, tmp2, 0))
+	int quest_res;
+
+	quest_res = question_mark_handler(str, i, tmp2, 0);
+	if (quest_res == 1)
 		return (1);
+	if (quest_res == 2)
+		return (0);
 	*bra_flag = fill_input(str, i, tmp2, 0);
 	while (str[*i] && str[*i] != ' ')
 	{
-		if (str[*i + 1] == '$' || str[*i + 1] == '\'' || str[*i + 1] == '\"' || is_reserved(str[*i + 1]) || str[*i + 1] == '\0')
+		if (str[*i + 1] == '$' || str[*i + 1] == '\'' || str[*i + 1] == '\"' || is_reserved_export(str[*i + 1]) || str[*i + 1] == '\0')
 		{
 			(*i)++;
 			break ;
@@ -80,6 +85,7 @@ int     handle_brackets(char *str, int *index, int *bra_flag, char **tmp2)
 {
 	int i;
 	int j;
+	int quest_res;
 
 	i = *index;
 	j = 0;
@@ -94,7 +100,10 @@ int     handle_brackets(char *str, int *index, int *bra_flag, char **tmp2)
 		return (0);
 	}
 	i = *index + 1;
-	if (question_mark_handler(str, index, tmp2, 1))
+	quest_res = question_mark_handler(str, index, tmp2, 1);
+	if (quest_res == 1)
+		return (1);
+	if (quest_res == 2)
 		return (0);
 	*bra_flag = fill_input(str, &i, tmp2, 1);
 	while (str[*index] && str[*index] != '}')
@@ -123,7 +132,7 @@ void    expander(t_shell *shell)
 		if (shell->input[i] == '$' && (quotes[0] == 0 || quotes[1] == 1) &&
 			shell->input[i + 1] != '\0' && shell->input[i + 1] != ' ' &&
 			shell->input[i + 1] != '$' &&
-			!is_reserved(shell->input[i + 1]))
+			!is_reserved_export(shell->input[i + 1]))
 		{
 			if (shell->input[i + 1] == '{')
 				f_break = handle_brackets(shell->input, &i, &bra_flag, &tmp2);

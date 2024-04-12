@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 14:26:52 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/11 18:35:09 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/12 14:22:04 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,13 @@ int	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
 			(*index) += 4;
 			return (1);
 		}
-		else
+		else if (is_reserved_export(str[*index + 2]) || str[*index + 2] == ' ' || str[*index + 3] == ' ')
 		{
 			ft_putstr_fd("minishell ? : bad sostitution\n", 2);
 			g_exit_status = 1;
-			return (1);
+			return (2);
 		}
 	}
-	return (0);
-}
-
-int	is_reserved(char ch)
-{
-	if (ch == '>' || ch == '<' || ch == '|' || ch == '=')
-		return (1);
 	return (0);
 }
 

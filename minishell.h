@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/12 13:37:24 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/12 14:25:38 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ char	*ft_readline(const char *str);
 void	ft_lexer(t_shell *shell);
 int    question_mark_handler(char *str, int *index, char **tmp2, int brack_flag);
 void	handle_quotes(t_shell *shell, int i, int *quotes);
-int	    is_reserved(char ch);
+int	    is_reserved_export(char ch);
 
 // altsplit
 char	**ft_altsplit(char *s, char c);

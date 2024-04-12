@@ -6,11 +6,20 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:58 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/09 16:27:06 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/12 15:07:57 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	export_error(t_shell *shell, int i)
+{
+	ft_putstr_fd("minishell: export: ", 2);
+	ft_putstr_fd(shell->args[i], 2);
+	ft_putstr_fd("': not a valid identifier\n", 2);
+	g_exit_status = 1;
+	return (1);
+}
 
 //export senza argomenti restituisce la lista delle variabili
 void	export_no_args(t_shell *shell)
@@ -77,13 +86,7 @@ int	export_not_empty(char *arg, t_shell *shell, int i, int j)
 	t_str	*env;
 
 	if (arg[j] == '\0' || arg[j - 1] == ' '  || arg[j - 1] == '\0')
-	{
-		ft_putstr_fd("minishell: export: ", 2);
-		ft_putstr_fd(shell->args[i], 2);
-		ft_putstr_fd("': not a valid identifier\n", 2);
-		g_exit_status = 1;
-		return (1);
-	}
+		return (export_error(shell, i));
 	env = ft_altsplit(arg, '=');
 	if (env[1] == NULL)
 		env[1] = ft_strdup("");
@@ -106,7 +109,14 @@ void	ft_export(t_shell *shell)
 		j = 0;
 		arg = ft_strdup(shell->args[i]);
 		while (arg[j] != '\0' && arg[j] != '=')
+		{
+			if (is_reserved_export(arg[j]))
+			{
+				export_error(shell, i);
+				return ;
+			}
 			j++;
+		}
 		if (arg[j] == '\0' && arg[j - 1] != '=')
 		{
 			add_empty_env(arg, shell->my_env);

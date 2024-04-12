@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:26:07 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/05 14:25:08 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/12 15:53:18 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,14 @@ static void	ft_unsetenv(char *arg, t_shell *shell)
 		{
 			new_env[j] = ft_strdup((*shell->my_env)[i]);
 			j++;
+		}
+		if (ft_strncmp((*shell->my_env)[i], arg, ft_strlen(arg)) == 0)
+		{
+			if (!((*shell->my_env)[i][ft_strlen(arg)] == '=') && !((*shell->my_env)[i][ft_strlen(arg)] == 0))
+			{
+				new_env[j] = ft_strdup((*shell->my_env)[i]);
+				j++;
+			}
 		}
 		i++;
 	}
