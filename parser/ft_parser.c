@@ -1,33 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_parser.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/26 10:22:26 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/12 12:03:52 by mtani            ###   ########.fr       */
+/*   Created: 2024/04/12 12:08:20 by mtani             #+#    #+#             */
+/*   Updated: 2024/04/12 13:15:39 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_pwd(t_shell *shell)
+int		count_cmds(t_shell *shell)
 {
-	char	*pwd;
+	int		i;
+	int		count;
 
-	if (shell->args[1] != NULL)
+	i = 0;
+	count = 0;
+	while (shell->args[i])
 	{
-		ft_putstr_fd("minishell: pwd: too many arguments\n", 2);
-		return ;
+		if (ft_strncmp(shell->args[i], "|", 1) == 0)
+			count++;
+		i++;
 	}
-	pwd = getcwd(NULL, 0);
-	if (pwd == NULL)
-		perror(RED "minishell$ " WHITE);
-	else
-	{
-		ft_putstr_fd(pwd, 1);
-		ft_putstr_fd("\n", 1);
-		free(pwd);
-	}
+	return (count);
+}
+
+void	ft_parser(t_shell *shell)
+{
+	make_cmd_table(shell);
 }

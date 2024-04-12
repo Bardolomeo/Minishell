@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/11 18:16:33 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/12 12:06:24 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,9 @@ int main(int argc, char **argv, char **env)
 			ft_lexer(shell);
 			if (shell->input)
 			{
-				//echo '$a'$a'' non funziona
-				shell->args = ft_altsplit(shell->input, ' ');
 				if (ft_strncmp(shell->args[0], "exit", 4) == 0)
 				{
-					if (shell->args[2])
+					if (shell->args[1] && shell->args[2])
 					{
 						ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 						g_exit_status = 1;

@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/11 18:37:10 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/12 13:32:11 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,4 +150,5 @@ void	ft_lexer(t_shell *shell)
 
 	// i = 0;
 	expander(shell);
+	shell->args = ft_altsplit(shell->input, ' ');
 }

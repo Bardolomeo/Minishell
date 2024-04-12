@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/11 18:17:16 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/12 13:24:29 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,9 @@
 # define WHITE "\001\x1b[1;0m\002"
 extern int g_exit_status;
 
-typedef char *t_str;
-
 typedef struct s_simcmd
 {
-    t_str  *cmd_wargs;
+    char	*cmd_wargs;
 	char    *path;
 } t_simcmd;
 
@@ -67,6 +65,7 @@ typedef struct s_shell
 {
     char        *input;
 	char		**args;
+	t_list		*tokens;
     t_cmd       *cmd_table;
     char        ***my_env;
 } t_shell;
