@@ -17,7 +17,9 @@ void ft_error(int exit_status, char *str)
     if (str == NULL)
         perror("minishell");
     else
+	{
         ft_putstr_fd(str, 2);
-    g_exit_status = exit_status;
-    write(1, "\n", 1);
+   		write(1, "\n", 1);
+	}
+	g_exit_status = exit_status;
 }

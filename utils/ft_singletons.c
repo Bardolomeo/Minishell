@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_singletons.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 17:32:13 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/09 15:56:53 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/15 14:37:08 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,4 +22,10 @@ char ***ft_myenv(void)
 {
     static char **env = NULL;
     return(&env);
+}
+
+int *n_doc(void)
+{
+    static int n_doc = 0;
+    return(&n_doc);
 }

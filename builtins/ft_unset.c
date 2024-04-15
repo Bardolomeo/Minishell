@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:26:07 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/12 15:53:18 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:17:53 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,26 +54,26 @@ static void	ft_unsetenv(char *arg, t_shell *shell)
 	*(shell->my_env) = new_env;
 }
 
-void	ft_unset(t_shell *shell)
+void	ft_unset(t_shell *shell, int i)
 {
-	int		i;
+	int		j;
 
-	i = 0;
-	if (!shell->args[1])
+	j = 0;
+	if (!shell->cmd_table[i].cmd.cmd_wargs[1])
 	{
 		ft_putendl_fd("minishell: unset: not enough arguments", 2);
 		return ;
 	}
-	while (shell->args[i])
+	while (shell->cmd_table[i].cmd.cmd_wargs[j])
 	{
-		if (ft_strchr(shell->args[i], '='))
+		if (ft_strchr(shell->cmd_table[i].cmd.cmd_wargs[j], '='))
 		{
 			ft_putstr_fd(RED"minishell: unset: `"WHITE, 2);
-			ft_putstr_fd(shell->args[i], 2);
+			ft_putstr_fd(shell->cmd_table[i].cmd.cmd_wargs[j], 2);
 			ft_putendl_fd(RED"': not a valid identifier"WHITE, 2);
 		}
 		else
-			ft_unsetenv(shell->args[i], shell);
+			ft_unsetenv(shell->cmd_table[i].cmd.cmd_wargs[j], shell);
 		i++;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:58 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/12 15:07:57 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/15 10:47:45 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ int	export_not_empty(char *arg, t_shell *shell, int i, int j)
 	return (0);
 }
 
-void	ft_export(t_shell *shell)
+void	ft_export(t_shell *shell, int i)
 {
-	int		i;
+	//int		i;
 	int		j;
 	t_str	arg;
 

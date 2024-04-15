@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/12 16:51:43 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/15 14:37:52 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdio.h>
@@ -74,20 +75,24 @@ typedef struct s_shell
 } t_shell;
 
 // Builtins
-void	ft_cd(t_shell *shell);
+void	ft_cd(t_shell *shell, int i);
 void	ft_pwd(t_shell *shell);
-void	ft_echo(t_shell *shell);
+void	ft_echo(t_shell *shell, int i);
 void	ft_env(t_shell *shell);
-void	ft_export(t_shell *shell);
-void	ft_unset(t_shell *shell);
-void	ft_exec(t_shell *shell);
+void	ft_export(t_shell *shell, int i);
+void	ft_unset(t_shell *shell, int i);
+void	ft_exec(t_shell *shell, int i);
+int		ft_exit(t_shell *shell, int i);
 
 // Garbage collector
 void	*ft_malloc(size_t size);
 void	clear_garbage(void);
 t_list	**garbage_collector(void);
-char    ***ft_myenv(void);
 void	ft_free_array(char **array);
+
+//singletons
+int 	*n_doc(void);
+char    ***ft_myenv(void);
 
 // utils
 char    *ft_getenv(char *str, int flag);
@@ -97,12 +102,16 @@ int		is_reserved_export(char ch);
 
 // lexer and expander
 void	ft_lexer(t_shell *shell);
-int    question_mark_handler(char *str, int *index, char **tmp2, int brack_flag);
+int    	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag);
 void	handle_quotes(t_shell *shell, int i, int *quotes);
-int	    is_reserved(char ch);
 
 // parser
 void	ft_parser(t_shell *shell);
+int		create_heredoc(char *limiter, char *line, int *n_doc);
+
+// executor
+void	ft_executor(t_shell *shell);
+int		count_cmds(t_shell *shell);
 
 // altsplit
 char	**ft_altsplit(char *s, char c);
