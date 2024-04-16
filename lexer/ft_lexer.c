@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/12 16:51:43 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 17:14:33 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@ char    *ft_getenv(char *str, int bra_flag)
 	myenv = *ft_myenv();
 	len = 0;
 	i = -1;
-	while (myenv[++i] && *str != '\"' && *str != '\'' && !is_reserved_export(*str) && *str!= '\0' && *str != ' ')
+	while (myenv[++i] && *str != '\"' && *str != '\'' && !is_reserved_export(*str) && *str!= '\0' && *str != ' ' && *str != '=')
 	{
 		if (bra_flag == 0)
 		{
-			while (str[len] && str[len] != ' ' && str[len] != '$' && !is_reserved_export(str[len]) && str[len] != '\0' && str[len] != '\"' && str[len] != '\'')
+			while (str[len] && str[len] != ' ' && str[len] != '$' 
+			&& !is_reserved_export(str[len]) && str[len] != '\0' 
+			&& str[len] != '\"' && str[len] != '\'' && str[len] != '=')
 				len++;
 		}
 		else
@@ -71,7 +73,9 @@ int	expand_wo_brackets(char *str, int *i, char **tmp2, int *bra_flag)
 	*bra_flag = fill_input(str, i, tmp2, 0);
 	while (str[*i] && str[*i] != ' ')
 	{
-		if (str[*i + 1] == '$' || str[*i + 1] == '\'' || str[*i + 1] == '\"' || is_reserved_export(str[*i + 1]) || str[*i + 1] == '\0')
+		if (str[*i + 1] == '$' || str[*i + 1] == '\'' || str[*i + 1] == '\"' 
+		|| is_reserved_export(str[*i + 1]) || str[*i + 1] == '\0' 
+		|| str[*i + 1] == ' ' || str[*i + 1] == '=')
 		{
 			(*i)++;
 			break ;
@@ -132,7 +136,7 @@ void    expander(t_shell *shell)
 		if (shell->input[i] == '$' && (quotes[0] == 0 || quotes[1] == 1) &&
 			shell->input[i + 1] != '\0' && shell->input[i + 1] != ' ' &&
 			shell->input[i + 1] != '$' &&
-			!is_reserved_export(shell->input[i + 1]))
+			!is_reserved_export(shell->input[i + 1]) && shell->input[i + 1] != '\"' && shell->input[i + 1] != '\'')
 		{
 			if (shell->input[i + 1] == '{')
 				f_break = handle_brackets(shell->input, &i, &bra_flag, &tmp2);
@@ -155,9 +159,6 @@ void    expander(t_shell *shell)
 
 void	ft_lexer(t_shell *shell)
 {
-	// int i;
-
-	// i = 0;
 	expander(shell);
 	shell->args = ft_altsplit(shell->input, ' ');
 }

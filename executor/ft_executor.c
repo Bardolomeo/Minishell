@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 09:46:47 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/16 12:15:16 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 16:26:58 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,24 @@ void	connect_pipe(int *fd, int cmd_count)
 	}
 }
 
-int	check_builtins(t_shell *shell, int i)
+int	check_builtins(t_shell *shell, int i, char *pflag)
 {
-	if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "pwd", 3) == 0)
-		ft_pwd(shell);
-	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "cd", 2) == 0)
+	if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "pwd", 4) == 0)
+		ft_pwd(shell, i);
+	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "cd", 3) == 0)
 		ft_cd(shell, i);
-	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "echo", 4) == 0)
+	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "echo", 5) == 0)
 		ft_echo(shell, i);
-	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "export", 6) == 0)
-		ft_export(shell, i);
-	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "unset", 5) == 0)
+	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "export", 7) == 0)
+		ft_export(shell, i, pflag);
+	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "unset", 6) == 0)
 		ft_unset(shell, i);
-	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "env", 3) == 0)
-		ft_env(shell);
+	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "env", 4) == 0)
+		ft_env(shell, i);
 	else
 		return (0);
-	clear_garbage();
+	if (ft_strncmp(pflag, "inpipe", 6) == 0)
+		clear_garbage();
 	return (1);
 }
 
@@ -55,6 +56,8 @@ char	*get_valid_path(t_shell *shell, int i)
 	j = 0;
 	k = 0;
 	env = *shell->my_env;
+	if (shell->cmd_table[i].cmd.cmd_wargs[0][0] == '/')
+		return (shell->cmd_table[i].cmd.cmd_wargs[0]);
 	while (env[j] != NULL)
 	{
 		if (ft_strncmp(env[j], "PATH=", 5) == 0)
@@ -87,7 +90,6 @@ void		check_exit(t_shell *shell)
 			{
 				if (shell->cmd_table->cmd.cmd_wargs[1])
 					g_exit_status = ft_atoi(shell->cmd_table->cmd.cmd_wargs[1]);
-				printf("exit status: %d\n", g_exit_status);
 				clear_garbage();
 				exit(g_exit_status);
 			}
@@ -123,7 +125,7 @@ void	set_dup2(t_shell *shell, int i, int *fd, int cmd_count)
 		return ;
 	if (i == 0)
 		init_first_pipe(fd, i);
-	if (i == cmd_count - 1)
+	else if (i == cmd_count - 1)
 		init_last_pipe(fd, i);
 	else
 		init_mid_pipe(fd, i);
@@ -167,13 +169,18 @@ void	ft_executor(t_shell	*shell)
 	int		i;
 
 	i = 0;
+	status = 0;
 	cmd_count = count_cmds(shell);
-	printf("cmd_count: %d\n", cmd_count);
 	check_exit(shell);
 	if (cmd_count > 1)
 	{
 		fd = (int *)ft_malloc(sizeof(int) * ((cmd_count - 1) * 2));
 		connect_pipe(fd, cmd_count);
+	}
+	else if (cmd_count == 1)
+	{
+		if (check_builtins(shell, 0, "outpipe"))
+			return ;
 	}
 	while (i < cmd_count)
 	{
@@ -181,7 +188,7 @@ void	ft_executor(t_shell	*shell)
 		if (shell->cmd_table[i].pid == 0)
 		{
 			set_dup2(shell, i, fd, cmd_count);
-			if (check_builtins(shell, i))
+			if (check_builtins(shell, i, "inpipe"))
 				exit(errno) ;
 			shell->cmd_table[i].cmd.path = get_valid_path(shell, i);
 			if (shell->cmd_table[i].cmd.path == NULL)
@@ -191,7 +198,7 @@ void	ft_executor(t_shell	*shell)
 			}
 			execve(shell->cmd_table[i].cmd.path, shell->cmd_table[i].cmd.cmd_wargs, *shell->my_env);
 			ft_error(errno, NULL);
-			printf("errno: %d\n", errno);
+			clear_garbage();
 			exit(errno);
 		}
 		else
@@ -212,7 +219,7 @@ void	ft_executor(t_shell	*shell)
 		//printf("cmd_table[%d].cmd.cmd_wargs: %s\n", i, shell->cmd_table[i].cmd.cmd_wargs[1]);
 		i++;
 	}
-	while (wait4(shell->cmd_table[i - 1].pid, &status, WUNTRACED, NULL) > 0 && i >= 0)
+	while (i > 0 && wait4(shell->cmd_table[i - 1].pid, &status, WUNTRACED, NULL) > 0)
 	{
 		i--;
 		if (WIFEXITED(status))

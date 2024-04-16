@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 12:08:20 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/16 12:27:06 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 16:48:58 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,22 @@ void	redirect_append(t_shell *shell, int j, int *i)
 	*i = tmp;
 }
 
+void	initialize_cmd_table(t_shell *shell, int cmd_count)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (i < cmd_count)
+	{
+		shell->cmd_table[i].cmd.cmd_wargs = NULL;
+		shell->cmd_table[i].io[0][0] = '\0';
+		shell->cmd_table[i].io[1][0] = '\0';
+		i++;
+	}
+}
+
 void	set_redirects(t_shell *shell)
 {
 	int		cmd_count;
@@ -156,6 +172,7 @@ void	set_redirects(t_shell *shell)
 	cmd_count = count_cmds(shell);
 	shell->cmd_table = NULL;
 	shell->cmd_table = ft_malloc(sizeof(t_cmd) * (cmd_count + 1));
+	initialize_cmd_table(shell, cmd_count);
 	while (shell->input[i])
 	{
 		if (shell->input[i] == '<' && shell->input[i + 1] == '<')
@@ -206,10 +223,30 @@ void	set_redirects(t_shell *shell)
 	}
 }
 
+void	print_cmd_table(t_shell *shell)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	while (shell->cmd_table[i].cmd.cmd_wargs)
+	{
+		j = 0;
+		while (shell->cmd_table[i].cmd.cmd_wargs[j])
+		{
+			printf("cmd_table[%d].cmd.cmd_wargs[%d]: %s\n", i, j, shell->cmd_table[i].cmd.cmd_wargs[j]);
+			j++;
+		}
+		i++;
+	}
+}
+
 void	ft_parser(t_shell *shell)
 {
 	set_redirects(shell);
 	make_cmd_table(shell);
+	print_cmd_table(shell);
 	// printf("cmd_table[0].io[0]: %s\n", shell->cmd_table[0].io[0]);
 	// printf("cmd_table[0].io[1]: %s\n", shell->cmd_table[0].io[1]);
 	// printf("cmd_table[1].io[1]: %s\n", shell->cmd_table[1].io[1]);

@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/15 14:37:52 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 16:56:53 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdio.h>
+# include <string.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include <unistd.h>
@@ -76,10 +77,10 @@ typedef struct s_shell
 
 // Builtins
 void	ft_cd(t_shell *shell, int i);
-void	ft_pwd(t_shell *shell);
+void	ft_pwd(t_shell *shell, int i);
 void	ft_echo(t_shell *shell, int i);
-void	ft_env(t_shell *shell);
-void	ft_export(t_shell *shell, int i);
+void	ft_env(t_shell *shell, int i);
+void	ft_export(t_shell *shell, int i, char *pflag);
 void	ft_unset(t_shell *shell, int i);
 void	ft_exec(t_shell *shell, int i);
 int		ft_exit(t_shell *shell, int i);
@@ -115,7 +116,7 @@ int		count_cmds(t_shell *shell);
 
 // altsplit
 char	**ft_altsplit(char *s, char c);
-char	find_quotetype(const char *s, size_t i, char quote);
+char	find_quotetype(const char *s, size_t i, char quote, int *in_arr);
 int		find_unquoted(const char *s, char c, size_t start);
 int		find_quoted(const char *s, char quote, size_t start);
 

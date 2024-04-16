@@ -6,16 +6,15 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:58 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/15 10:47:45 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 15:12:24 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	export_error(t_shell *shell, int i)
+int	export_error(void)
 {
 	ft_putstr_fd("minishell: export: ", 2);
-	ft_putstr_fd(shell->args[i], 2);
 	ft_putstr_fd("': not a valid identifier\n", 2);
 	g_exit_status = 1;
 	return (1);
@@ -40,7 +39,8 @@ void	export_no_args(t_shell *shell)
 void	add_empty_env(char *env, char ***my_env)
 {
 	int 	i;
-
+	t_str	*new_env;
+	
 	i = 0;
 	while ((*my_env)[i] != NULL)
 	{
@@ -48,8 +48,16 @@ void	add_empty_env(char *env, char ***my_env)
 			return ;
 		i++;
 	}
-	(*my_env)[i] = ft_strdup(env);
-	(*my_env)[i + 1] = NULL;
+	new_env = (t_str *)ft_malloc(sizeof(t_str) * (i + 2));
+	i = 0;
+	while ((*my_env)[i] != NULL)
+	{
+		new_env[i] = ft_strdup((*my_env)[i]);
+		i++;
+	}
+	new_env[i] = ft_strdup(env);
+	new_env[i + 1] = NULL;
+	(*my_env) = new_env;
 }
 
 void	add_env(t_shell *shell, char *key, char *value)
@@ -81,12 +89,12 @@ void	add_env(t_shell *shell, char *key, char *value)
 	*(shell->my_env) = new_env;
 }
 
-int	export_not_empty(char *arg, t_shell *shell, int i, int j)
+int	export_not_empty(char *arg, t_shell *shell, int j)
 {
 	t_str	*env;
 
 	if (arg[j] == '\0' || arg[j - 1] == ' '  || arg[j - 1] == '\0')
-		return (export_error(shell, i));
+		return (export_error());
 	env = ft_altsplit(arg, '=');
 	if (env[1] == NULL)
 		env[1] = ft_strdup("");
@@ -95,33 +103,35 @@ int	export_not_empty(char *arg, t_shell *shell, int i, int j)
 	return (0);
 }
 
-void	ft_export(t_shell *shell, int i)
+void	ft_export(t_shell *shell, int i, char *pflag)
 {
-	//int		i;
 	int		j;
+	int		k;
 	t_str	arg;
 
-	if (shell->args[1] == NULL)
+	if (ft_strncmp(pflag, "inpipe", 6) == 0)
+		return ;
+	if (shell->cmd_table[i].cmd.cmd_wargs[1] == NULL)
 		export_no_args(shell);
-	i = 0;
-	while (shell->args[++i] != NULL)
+	j = 0;
+	while (shell->cmd_table[i].cmd.cmd_wargs[++j] != NULL)
 	{
-		j = 0;
-		arg = ft_strdup(shell->args[i]);
-		while (arg[j] != '\0' && arg[j] != '=')
+		k = 0;
+		arg = ft_strdup(shell->cmd_table[i].cmd.cmd_wargs[j]);
+		while (arg[k] != '\0' && arg[k] != '=')
 		{
-			if (is_reserved_export(arg[j]))
+			if (is_reserved_export(arg[k]))
 			{
-				export_error(shell, i);
+				export_error();
 				return ;
 			}
-			j++;
+			k++;
 		}
-		if (arg[j] == '\0' && arg[j - 1] != '=')
+		if (arg[k] == '\0' && arg[k - 1] != '=')
 		{
 			add_empty_env(arg, shell->my_env);
 			continue ;
 		}
-	export_not_empty(arg, shell, i, j);
+	export_not_empty(arg, shell, k);
 	}
 }

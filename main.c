@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/16 12:19:07 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 16:34:28 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,16 @@ void	print_args(char **args)
 	}
 }
 
+void	check_input(t_shell *shell)
+{
+	int i;
+
+	i = 0;
+	while (shell->input[i] == ' ' || shell->input[i] == '\t')
+		i++;
+	shell->input = shell->input + i;
+}
+
 int main(int argc, char **argv, char **env)
 {
 	t_shell	*shell;
@@ -62,6 +72,7 @@ int main(int argc, char **argv, char **env)
 	shell->input = ft_readline(RED "minishell$ " WHITE);
 	while (shell->input)
 	{
+		check_input(shell);
 		*(shell->my_env) = ft_strdup_array(*(shell->my_env));
 		if (ft_strlen(shell->input) > 0)
 		{

@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:04 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/15 14:42:06 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 15:07:05 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,12 @@ void	clear_garbage()
 	while (node)
 	{
 		tmp = node->next;
-		free(node->content);
-		free(node);
+		if (node)
+		{
+			if (node->content)
+				free(node->content);
+			free(node);
+		}
 		node = tmp;
 	}
 	while (++i < *n_doc())

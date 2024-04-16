@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_altsplit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:11:44 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/12 14:02:29 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/16 17:09:32 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,8 @@ static char	**ft_make_altsplit(char **array, char const *s, char c)
 		return (NULL);
 	while (s[++i] != '\0')
 	{
-		quote = find_quotetype(s, i, quote);
-		if (s[i] != c && in_arr == 0)
+		quote = find_quotetype(s, i, quote, &in_arr);
+		if (s[i] != c && in_arr == 0 && s[i + 1] != '\'' && s[i + 1] != '\"')
 		{
 			array[arr_index++] = ft_make_altstring(s, i, c, quote);
 			if (array[arr_index - 1] == NULL)

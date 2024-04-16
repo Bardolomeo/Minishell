@@ -6,18 +6,21 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:26:15 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/11 16:15:57 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 17:10:01 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	find_quotetype(const char *s, size_t i, char quote)
+char	find_quotetype(const char *s, size_t i, char quote, int *in_arr)
 {
 	if ((s[i] == '"' || s[i] == '\'') && quote == 0)
 		quote = s[i];
 	else if (s[i] == quote && quote != 0)
+	{
+		*in_arr = 0;
 		quote = 0;
+	}
 	return (quote);
 }
 

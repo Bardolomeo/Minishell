@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:42 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/15 10:32:14 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 16:43:11 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	ft_echo(t_shell *shell, int i)
 
 	j = 1;
 	n_flag = 0;
-	if (shell->cmd_table[i].cmd.cmd_wargs[1] && !ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[1], "-n", 2))
+	if (shell->cmd_table[i].cmd.cmd_wargs[1] && !ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[1], "-n", 3))
 	{
 		n_flag = 1;
-		i++;
+		j++;
 	}
 	while (shell->cmd_table[i].cmd.cmd_wargs[j])
 	{

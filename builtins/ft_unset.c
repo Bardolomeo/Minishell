@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:26:07 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/15 11:17:53 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 13:59:35 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	ft_unset(t_shell *shell, int i)
 {
 	int		j;
 
-	j = 0;
+	j = 1;
 	if (!shell->cmd_table[i].cmd.cmd_wargs[1])
 	{
 		ft_putendl_fd("minishell: unset: not enough arguments", 2);
@@ -74,6 +74,6 @@ void	ft_unset(t_shell *shell, int i)
 		}
 		else
 			ft_unsetenv(shell->cmd_table[i].cmd.cmd_wargs[j], shell);
-		i++;
+		j++;
 	}
 }
