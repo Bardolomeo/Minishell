@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 09:46:47 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/15 14:16:32 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 12:15:16 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	check_builtins(t_shell *shell, int i)
 		ft_env(shell);
 	else
 		return (0);
+	clear_garbage();
 	return (1);
 }
 
@@ -93,6 +94,71 @@ void		check_exit(t_shell *shell)
 		}
 }
 
+void	init_first_pipe(int *fd, int i)
+{
+	dup2(fd[i * 2 + 1], 1);
+	close(fd[i * 2 + 1]);
+}
+
+void	init_last_pipe(int *fd, int i)
+{
+	dup2(fd[(i - 1) * 2], 0);
+	close(fd[(i - 1) * 2]);
+}
+
+void	init_mid_pipe(int *fd, int i)
+{
+	dup2(fd[(i - 1) * 2], 0);
+	close(fd[(i - 1) * 2]);
+	dup2(fd[i * 2 + 1], 1);
+	close(fd[i * 2 + 1]);
+}
+
+void	set_dup2(t_shell *shell, int i, int *fd, int cmd_count)
+{
+	int fd_redir_in;
+	int fd_redir_out;
+
+	if (cmd_count == 1)
+		return ;
+	if (i == 0)
+		init_first_pipe(fd, i);
+	if (i == cmd_count - 1)
+		init_last_pipe(fd, i);
+	else
+		init_mid_pipe(fd, i);
+	if (shell->cmd_table[i].io[0][0] != '\0')
+	{
+		fd_redir_in = open(shell->cmd_table[i].io[0], O_RDONLY);
+		if (fd_redir_in < 0)
+		{
+			ft_error(errno, NULL);
+			exit(errno);
+		}
+		dup2(fd_redir_in, 0);
+		close(fd_redir_in);
+		if (i == 0)
+			close(fd[0]);
+		else
+			close(fd[(i - 1) * 2]);
+	}
+	if (shell->cmd_table[i].io[1][0] != '\0')
+	{
+		fd_redir_out = open(shell->cmd_table[i].io[1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd_redir_out < 0)
+		{
+			ft_error(errno, NULL);
+			exit(errno);
+		}
+		dup2(fd_redir_out, 1);
+		close(fd_redir_out);
+		if (i == cmd_count - 1)
+			close(fd[(i - 1) * 2]);
+		else
+			close(fd[i * 2 + 1]);
+	}
+}
+
 void	ft_executor(t_shell	*shell)
 {
 	int		cmd_count;
@@ -114,7 +180,7 @@ void	ft_executor(t_shell	*shell)
 		shell->cmd_table[i].pid = fork();
 		if (shell->cmd_table[i].pid == 0)
 		{
-			//set_dups(shell, i, fd, cmd_count);
+			set_dup2(shell, i, fd, cmd_count);
 			if (check_builtins(shell, i))
 				exit(errno) ;
 			shell->cmd_table[i].cmd.path = get_valid_path(shell, i);
@@ -130,14 +196,28 @@ void	ft_executor(t_shell	*shell)
 		}
 		else
 		{
-			wait4(shell->cmd_table[i].pid, &status, WUNTRACED, NULL);
-			if (WIFEXITED(status))
+			if (cmd_count > 1)
 			{
-				g_exit_status = WEXITSTATUS(status);
+				if (i == 0)
+					close(fd[1]);
+				else if (i == cmd_count - 1)
+					close(fd[(i - 1) * 2]);
+				else
+				{
+					close(fd[(i - 1) * 2]);
+					close(fd[i * 2 + 1]);
+				}
 			}
 		}
-
 		//printf("cmd_table[%d].cmd.cmd_wargs: %s\n", i, shell->cmd_table[i].cmd.cmd_wargs[1]);
 		i++;
+	}
+	while (wait4(shell->cmd_table[i - 1].pid, &status, WUNTRACED, NULL) > 0 && i >= 0)
+	{
+		i--;
+		if (WIFEXITED(status))
+		{
+			g_exit_status = WEXITSTATUS(status);
+		}
 	}
 }

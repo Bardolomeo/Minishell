@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 12:08:20 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/15 14:48:14 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/16 12:27:06 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,7 @@ void	set_redirects(t_shell *shell)
 	j = 0;
 	k = 0;
 	cmd_count = count_cmds(shell);
+	shell->cmd_table = NULL;
 	shell->cmd_table = ft_malloc(sizeof(t_cmd) * (cmd_count + 1));
 	while (shell->input[i])
 	{
