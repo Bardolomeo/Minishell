@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_altsplit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:11:44 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/16 17:09:32 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/17 15:52:44 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,10 @@ static char	**ft_make_altsplit(char **array, char const *s, char c)
 		else if (s[i] == c && quote == 0)
 			in_arr = 0;
 	}
-	array[arr_index] = 0;
+	if (arr_index > 0 && !ft_strncmp(array[arr_index - 1], "", 1))
+		array[arr_index - 1] = 0;
+	else
+		array[arr_index] = 0;
 	return (array);
 }
 
@@ -124,7 +127,7 @@ char	**ft_altsplit(char *s, char c)
 {
 	char	**array;
 
-	array = (char **)ft_calloc(ft_altcount_arr(s, c) + 1, sizeof(char *));
+	array = (char **)ft_calloc(ft_altcount_arr(s, c) + 2, sizeof(char *));
 	if (array == NULL)
 		return (NULL);
 	array = ft_make_altsplit(array, s, c);

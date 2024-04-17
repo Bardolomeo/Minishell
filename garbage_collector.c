@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:04 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/16 15:07:05 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/17 13:57:32 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	clear_garbage()
 	}
 	while (++i < *n_doc())
 	{
-		fname = ft_strjoin("./.tmp/heredoc", ft_itoa(i));
+		fname = ft_strjoin("./tmp/heredoc", ft_itoa(i));
 		unlink(fname);
 	}
 	*garbage_collector() = NULL;

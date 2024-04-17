@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 14:26:52 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/12 14:22:04 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/17 13:40:18 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,20 @@ void	handle_quotes(t_shell *shell, int i, int *quotes)
 		quotes[1] = 1;
 	else if (shell->input[i] == '\"' && quotes[1] == 1)
 		quotes[1] = 0;
+}
+
+int	redirect_no_expand(t_shell *shell, int i)
+{
+	if (i > 0)
+		i--;
+	while (i >= 0 && shell->input[i] == ' ')
+		i--;
+	if (shell->input[i] == '<' || shell->input[i] == '>')
+	{
+		if (i - 1 >= 0 && shell->input[i - 1] == '<' && shell->input[i] == '<')
+			return (2);
+		ft_error(1, "minishell: ambiguos redirect \n");
+		return (1);
+	}
+	return (0);
 }

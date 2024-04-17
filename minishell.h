@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/16 16:56:53 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/17 13:19:08 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,6 @@ typedef struct s_cmd
     pid_t       pid;
 } t_cmd;
 
-// typedef struct s_cmdline
-// {
-//     t_cmd       *cmd_table;
-//     //optional cmd_separator
-// } t_cmdline;
 
 typedef struct s_shell
 {
@@ -82,8 +77,8 @@ void	ft_echo(t_shell *shell, int i);
 void	ft_env(t_shell *shell, int i);
 void	ft_export(t_shell *shell, int i, char *pflag);
 void	ft_unset(t_shell *shell, int i);
-void	ft_exec(t_shell *shell, int i);
-int		ft_exit(t_shell *shell, int i);
+// void	ft_exec(t_shell *shell, int i);
+// int		ft_exit(t_shell *shell, int i);
 
 // Garbage collector
 void	*ft_malloc(size_t size);
@@ -105,6 +100,7 @@ int		is_reserved_export(char ch);
 void	ft_lexer(t_shell *shell);
 int    	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag);
 void	handle_quotes(t_shell *shell, int i, int *quotes);
+int	    redirect_no_expand(t_shell *shell, int i);
 
 // parser
 void	ft_parser(t_shell *shell);

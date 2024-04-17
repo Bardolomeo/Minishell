@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lexer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/16 17:14:33 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/17 13:41:37 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ char    *ft_getenv(char *str, int bra_flag)
 	{
 		if (bra_flag == 0)
 		{
-			while (str[len] && str[len] != ' ' && str[len] != '$' 
-			&& !is_reserved_export(str[len]) && str[len] != '\0' 
+			while (str[len] && str[len] != ' ' && str[len] != '$'
+			&& !is_reserved_export(str[len]) && str[len] != '\0'
 			&& str[len] != '\"' && str[len] != '\'' && str[len] != '=')
 				len++;
 		}
@@ -73,8 +73,8 @@ int	expand_wo_brackets(char *str, int *i, char **tmp2, int *bra_flag)
 	*bra_flag = fill_input(str, i, tmp2, 0);
 	while (str[*i] && str[*i] != ' ')
 	{
-		if (str[*i + 1] == '$' || str[*i + 1] == '\'' || str[*i + 1] == '\"' 
-		|| is_reserved_export(str[*i + 1]) || str[*i + 1] == '\0' 
+		if (str[*i + 1] == '$' || str[*i + 1] == '\'' || str[*i + 1] == '\"'
+		|| is_reserved_export(str[*i + 1]) || str[*i + 1] == '\0'
 		|| str[*i + 1] == ' ' || str[*i + 1] == '=')
 		{
 			(*i)++;
@@ -135,9 +135,20 @@ void    expander(t_shell *shell)
 		handle_quotes(shell, i, quotes);
 		if (shell->input[i] == '$' && (quotes[0] == 0 || quotes[1] == 1) &&
 			shell->input[i + 1] != '\0' && shell->input[i + 1] != ' ' &&
-			shell->input[i + 1] != '$' &&
+			shell->input[i + 1] != '$' && shell->input[i + 1] != '\t' &&
 			!is_reserved_export(shell->input[i + 1]) && shell->input[i + 1] != '\"' && shell->input[i + 1] != '\'')
 		{
+			if (redirect_no_expand(shell, i) == 1)
+			{
+				shell->input = NULL;
+				return ;
+			}
+			else if (redirect_no_expand(shell, i) == 2)
+			{
+				tmp2 = ft_strjoin(tmp2, ft_substr(shell->input, i, 1));
+				i++;
+				continue;
+			}
 			if (shell->input[i + 1] == '{')
 				f_break = handle_brackets(shell->input, &i, &bra_flag, &tmp2);
 			else
@@ -160,5 +171,6 @@ void    expander(t_shell *shell)
 void	ft_lexer(t_shell *shell)
 {
 	expander(shell);
-	shell->args = ft_altsplit(shell->input, ' ');
+	if (shell->input != NULL)
+		shell->args = ft_altsplit(shell->input, ' ');
 }

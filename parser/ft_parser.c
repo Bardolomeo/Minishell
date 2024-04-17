@@ -3,21 +3,52 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parser.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 12:08:20 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/16 16:48:58 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/17 16:04:34 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+void	namefile_quotes(t_shell *shell, int *i, int j, int n_io)
+{
+	int	k;
+
+	shell->input[*i] = ' ';
+	(*i)++;
+	k = 0;
+	while (shell->input[*i] && shell->input[*i] != '\"')
+	{
+		shell->cmd_table[j].io[n_io][k] = shell->input[*i];
+		shell->input[*i] = ' ';
+		(*i)++;
+		k++;
+	}
+	shell->cmd_table[j].io[n_io][k] = '\0';
+}
+
+void	namefile_no_quotes(t_shell *shell, int *tmp, int j, int n_io)
+{
+	int	k;
+
+	k = 0;
+	while (shell->input[*tmp] && shell->input[*tmp] != ' ')
+	{
+		shell->cmd_table[j].io[n_io][k] = shell->input[*tmp];
+		shell->input[*tmp] = ' ';
+		(*tmp)++;
+		k++;
+	}
+	shell->cmd_table[j].io[n_io][k] = '\0';
+}
 int	create_heredoc(char *limiter, char *line, int *n_doc)
 {
 	int		fd;
 	char	*fname;
 
-	fname = ft_strjoin("./.tmp/heredoc", ft_itoa(*n_doc));
+	fname = ft_strjoin("./tmp/heredoc", ft_itoa(*n_doc));
 	fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -25,12 +56,12 @@ int	create_heredoc(char *limiter, char *line, int *n_doc)
 		return (1);
 	}
 	(*n_doc)++;
-	line = ft_readline(">"); // leggiamo prima riga del file
-	while (ft_strncmp(line, limiter, ft_strlen(limiter)) != 0) // finchè la riga non è uguale al limiter
+	line = ft_readline(">");
+	while (ft_strncmp(line, limiter, ft_strlen(limiter)) != 0)
 	{
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
-		line = ft_readline(">"); // leggiamo la riga successiva
+		line = ft_readline(">");
 	}
 	close(fd);
 	return (0);
@@ -43,7 +74,7 @@ int		count_cmds(t_shell *shell)
 
 	i = 0;
 	count = 0;
-	while (shell->args[i])
+	while (shell->args && shell->args[i])
 	{
 		if (ft_strncmp(shell->args[i], "|", 1) == 0)
 			count++;
@@ -71,12 +102,14 @@ void	make_cmd_table(t_shell *shell)
 	int 	i;
 
 	i = 0;
+	singlecommands = NULL;
 	cmd_count = count_cmds(shell);
-	singlecommands = ft_split(shell->input, '|');
+	if (shell->input)
+		singlecommands = ft_split(shell->input, '|');
 	while (i < cmd_count)
 	{
-		shell->cmd_table[i].cmd.cmd_wargs = ft_altsplit(singlecommands[i], ' ');
-		//printf("cmd_table[%d].cmd.cmd_wargs: %s\n", i, shell->cmd_table[i].cmd.cmd_wargs[1]);
+		if (singlecommands)
+			shell->cmd_table[i].cmd.cmd_wargs = ft_altsplit(singlecommands[i], ' ');
 		i++;
 	}
 }
@@ -87,26 +120,43 @@ void	redirect_heredoc(t_shell *shell, int j, int *i)
 	char		*line;
 	int			k;
 	int			tmp;
-	
+	int			quote;
+
+	quote = 0;
 	line = NULL;
 	limiter = ft_malloc(sizeof(char) * 100);
 	tmp = *i;
-	tmp += 2;
+	while (tmp < *i + 2)
+		shell->input[tmp++] = ' ';
 	while (shell->input[tmp] && shell->input[tmp] == ' ')
 		tmp++;
 	k = 0;
-	while (shell->input[tmp] && shell->input[tmp] != ' ')
+	while (shell->input[tmp] && (shell->input[tmp] != ' ' || quote == 1))
 	{
 		if (shell->input[tmp] == '>' || shell->input[tmp] == '<') // TODO: implementare errore
 			break;
+		if (k == 0 && (shell->input[tmp] == '"' || shell->input[tmp] == '\''))
+		{
+			shell->input[tmp] = ' ';
+			tmp++;
+			quote = 1;
+			continue;
+		}
+		if ((shell->input[tmp + 1] == ' ' || shell->input[tmp + 1] == '\0')
+			&& (shell->input[tmp] == '"' || shell->input[tmp] == '\''))
+			{
+				shell->input[tmp] = ' ';
+				break;
+			}
 		limiter[k] = shell->input[tmp];
+		shell->input[tmp] = ' ';
 		tmp++;
 		k++;
 	}
 	limiter[k] = '\0';
 	if (create_heredoc(limiter, line, n_doc()) == 1)
 		return ;
-	line = ft_strjoin("./.tmp/heredoc", ft_itoa(*n_doc() - 1));
+	line = ft_strjoin("./tmp/heredoc", ft_itoa(*n_doc() - 1));
 	k = 0;
 	while (line[k])
 	{
@@ -123,23 +173,60 @@ void	redirect_append(t_shell *shell, int j, int *i)
 	int		k;
 	int		tmp;
 
-	tmp = *i + 2;
+	tmp = *i;
+	while (tmp < *i + 2)
+		shell->input[tmp++] = ' ';
 	while (shell->input[tmp] && shell->input[tmp] == ' ')
 		tmp++;
 	k = 0;
-	while (shell->input[tmp] && shell->input[tmp] != ' ')
-	{
-		shell->cmd_table[j].io[1][k] = shell->input[tmp];
-		tmp++;
-		k++;
-	}
-	shell->cmd_table[j].io[1][k] = '\0';
+	if (shell->input[tmp] == '\"' || shell->input[tmp] == '\'')
+		namefile_quotes(shell, &tmp, j, 1);
+	else
+		namefile_no_quotes(shell, &tmp, j, 1);
 	fd = open(shell->cmd_table[j].io[1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
 		ft_error(1, "minishell: no such file or directory");
 	else
 		close(fd);
 	*i = tmp;
+}
+
+void	redirect_input(t_shell *shell, int j, int *i)
+{
+	int fd;
+
+	shell->input[*i] = ' ';
+	(*i)++;								// poi apriamo il file in sola lettura e controlliamo se esiste
+	while (shell->input[*i] && shell->input[*i] == ' ')
+		(*i)++;
+	if (shell->input[*i] == '\"' || shell->input[*i] == '\'')
+		namefile_quotes(shell, i, j, 0);
+	else
+		namefile_no_quotes(shell, i, j, 0);
+	fd = open(shell->cmd_table[j].io[0], O_RDONLY);
+	if (fd < 0)
+		ft_error(1, "minishell: no such file or directory");
+	else
+		close(fd);
+}
+
+void	redirect_output(t_shell *shell, int *i, int j)
+{
+	int fd;
+
+	shell->input[*i] = ' ';
+	(*i)++;
+	while (shell->input[*i] && shell->input[*i] == ' ')
+		(*i)++;
+	if (shell->input[*i] == '\"' || shell->input[*i] == '\'')
+		namefile_quotes(shell, i, j, 1);
+	else
+		namefile_no_quotes(shell, i, j, 1);
+	fd = open(shell->cmd_table[j].io[1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0)
+		ft_error(1, "minishell: no such file or directory");
+	else
+		close(fd);
 }
 
 void	initialize_cmd_table(t_shell *shell, int cmd_count)
@@ -163,61 +250,24 @@ void	set_redirects(t_shell *shell)
 	int		cmd_count;
 	int		i;
 	int		j;
-	int		k;
-	int		fd;
 
 	i = 0;
 	j = 0;
-	k = 0;
 	cmd_count = count_cmds(shell);
 	shell->cmd_table = NULL;
 	shell->cmd_table = ft_malloc(sizeof(t_cmd) * (cmd_count + 1));
 	initialize_cmd_table(shell, cmd_count);
-	while (shell->input[i])
+	while (shell->input && shell->input[i])
 	{
 		if (shell->input[i] == '<' && shell->input[i + 1] == '<')
 			redirect_heredoc(shell, j, &i);
 		else if (shell->input[i] == '>' && shell->input[i + 1] == '>')
 			redirect_append(shell, j, &i);
-		else if (shell->input[i] == '<' && shell->input[i + 1] != '<')   // se troviamo un redirect di input, saltiamo l'indice di uno per saltare il <
-		{															// poi saltiamo gli spazi e copiamo il nome del file in cmd_table[j].io[0]																
-			i++;												// poi apriamo il file in sola lettura e controlliamo se esiste
-			while (shell->input[i] && shell->input[i] == ' ')
-				i++;
-			while (shell->input[i] && shell->input[i] != ' ')
-			{
-				shell->cmd_table[j].io[0][k] = shell->input[i];
-				i++;
-				k++;
-			}
-			shell->cmd_table[j].io[0][k] = '\0';
-			fd = open(shell->cmd_table[j].io[0], O_RDONLY);
-			if (fd < 0)
-				ft_error(1, "minishell: no such file or directory");
-			else
-				close(fd);
-			k = 0;
-		}
-		else if (shell->input[i] == '>' && shell->input[i + 1] != '>') // se troviamo un redirect di output, saltiamo l'indice di uno per saltare il >
-		{												// poi saltiamo gli spazi e copiamo il nome del file in cmd_table[j].io[1]
-			i++;										// poi apriamo il file in scrittura e controlliamo se esiste
-			while (shell->input[i] && shell->input[i] == ' ')
-				i++;
-			while (shell->input[i] && shell->input[i] != ' ')
-			{
-				shell->cmd_table[j].io[1][k] = shell->input[i];
-				i++;
-				k++;
-			}
-			shell->cmd_table[j].io[1][k] = '\0';
-			fd = open(shell->cmd_table[j].io[1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (fd < 0)
-				ft_error(1, "minishell: no such file or directory");
-			else
-				close(fd);
-			k = 0;
-		}
-		if (shell->input[i] && shell->input[i] == '|') // se troviamo un pipe, incrementiamo j e passiamo al prossimo comando
+		else if (shell->input[i] == '<' && shell->input[i + 1] != '<')
+			redirect_input(shell, j, &i);
+		else if (shell->input[i] == '>' && shell->input[i + 1] != '>')
+			redirect_output(shell, &i, j);
+		if (shell->input[i] && shell->input[i] == '|')
 			j++;
 		i++;
 	}
@@ -246,7 +296,7 @@ void	ft_parser(t_shell *shell)
 {
 	set_redirects(shell);
 	make_cmd_table(shell);
-	print_cmd_table(shell);
+	// print_cmd_table(shell);
 	// printf("cmd_table[0].io[0]: %s\n", shell->cmd_table[0].io[0]);
 	// printf("cmd_table[0].io[1]: %s\n", shell->cmd_table[0].io[1]);
 	// printf("cmd_table[1].io[1]: %s\n", shell->cmd_table[1].io[1]);

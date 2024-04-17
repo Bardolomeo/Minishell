@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_executor.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 09:46:47 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/16 16:26:58 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/17 15:56:53 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	connect_pipe(int *fd, int cmd_count)
 
 int	check_builtins(t_shell *shell, int i, char *pflag)
 {
+	if (!shell->cmd_table[i].cmd.cmd_wargs[0])
+		return (1);
 	if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "pwd", 4) == 0)
 		ft_pwd(shell, i);
 	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "cd", 3) == 0)
@@ -79,7 +81,7 @@ char	*get_valid_path(t_shell *shell, int i)
 
 void		check_exit(t_shell *shell)
 {
-	if (ft_strncmp(shell->cmd_table->cmd.cmd_wargs[0], "exit", 4) == 0)
+	if (shell->cmd_table->cmd.cmd_wargs[0] && ft_strncmp(shell->cmd_table->cmd.cmd_wargs[0], "exit", 4) == 0)
 		{
 			if (shell->cmd_table->cmd.cmd_wargs[1] && shell->cmd_table->cmd.cmd_wargs[2])
 			{
@@ -194,6 +196,7 @@ void	ft_executor(t_shell	*shell)
 			if (shell->cmd_table[i].cmd.path == NULL)
 			{
 				ft_error(127, NULL);
+				clear_garbage();
 				exit(127);
 			}
 			execve(shell->cmd_table[i].cmd.path, shell->cmd_table[i].cmd.cmd_wargs, *shell->my_env);
