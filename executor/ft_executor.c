@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_executor.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 09:46:47 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/17 15:56:53 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/18 15:49:331 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*get_valid_path(t_shell *shell, int i)
 	j = 0;
 	k = 0;
 	env = *shell->my_env;
-	if (shell->cmd_table[i].cmd.cmd_wargs[0][0] == '/')
+	if (shell->cmd_table[i].cmd.cmd_wargs[0][0] == '/' || shell->cmd_table[i].cmd.cmd_wargs[0][0] == '.')
 		return (shell->cmd_table[i].cmd.cmd_wargs[0]);
 	while (env[j] != NULL)
 	{
@@ -118,32 +118,31 @@ void	init_mid_pipe(int *fd, int i)
 	close(fd[i * 2 + 1]);
 }
 
-void	set_dup2(t_shell *shell, int i, int *fd, int cmd_count)
+int	redir_dup2(t_shell *shell, int i, int cmd_count, int *fd)
 {
 	int fd_redir_in;
 	int fd_redir_out;
-
-	if (cmd_count == 1)
-		return ;
-	if (i == 0)
-		init_first_pipe(fd, i);
-	else if (i == cmd_count - 1)
-		init_last_pipe(fd, i);
-	else
-		init_mid_pipe(fd, i);
+	
+	*fd_stand_in() = dup(0);
+	*fd_stand_out() = dup(1);
 	if (shell->cmd_table[i].io[0][0] != '\0')
 	{
 		fd_redir_in = open(shell->cmd_table[i].io[0], O_RDONLY);
 		if (fd_redir_in < 0)
 		{
 			ft_error(errno, NULL);
-			exit(errno);
+			if (cmd_count > 1)
+			{
+				clear_garbage();
+				exit(errno);
+			}
+			return (0);
 		}
 		dup2(fd_redir_in, 0);
 		close(fd_redir_in);
-		if (i == 0)
+		if (i == 0 && cmd_count > 1)
 			close(fd[0]);
-		else
+		else if (cmd_count > 1)
 			close(fd[(i - 1) * 2]);
 	}
 	if (shell->cmd_table[i].io[1][0] != '\0')
@@ -156,11 +155,46 @@ void	set_dup2(t_shell *shell, int i, int *fd, int cmd_count)
 		}
 		dup2(fd_redir_out, 1);
 		close(fd_redir_out);
-		if (i == cmd_count - 1)
+		if (i == cmd_count - 1 && cmd_count > 1)
 			close(fd[(i - 1) * 2]);
-		else
+		else if (cmd_count > 1)
 			close(fd[i * 2 + 1]);
 	}
+	if (shell->cmd_table[i].io[2][0] != '\0')
+	{
+		fd_redir_out = open(shell->cmd_table[i].io[2], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fd_redir_out < 0)
+		{
+			ft_error(errno, NULL);
+			exit(errno);
+		}
+		dup2(fd_redir_out, 1);
+		close(fd_redir_out);
+		if (i == cmd_count - 1 && cmd_count > 1)
+			close(fd[(i - 1) * 2]);
+		else if (cmd_count > 1)
+			close(fd[i * 2 + 1]);
+	}
+	return (1);
+}
+
+int	set_dup2(t_shell *shell, int i, int *fd, int cmd_count)
+{
+	if (cmd_count == 1)
+	{
+		if (!redir_dup2(shell, i, cmd_count, fd))
+			return (0);
+		return (1);
+	}
+	if (i == 0)
+		init_first_pipe(fd, i);
+	else if (i == cmd_count - 1)
+		init_last_pipe(fd, i);
+	else
+		init_mid_pipe(fd, i);
+	if (!redir_dup2(shell, i, cmd_count, fd))
+		return (0);
+	return (1);
 }
 
 void	ft_executor(t_shell	*shell)
@@ -181,17 +215,31 @@ void	ft_executor(t_shell	*shell)
 	}
 	else if (cmd_count == 1)
 	{
-		if (check_builtins(shell, 0, "outpipe"))
+		if (!set_dup2(shell, 0, NULL, cmd_count))
 			return ;
+		if (check_builtins(shell, 0, "outpipe"))
+		{
+			if (shell->cmd_table[0].io[1][0] != '\0')
+				dup2(*fd_stand_out(), 1);
+			if (shell->cmd_table[0].io[2][0] != '\0')
+				dup2(*fd_stand_out(), 1);
+			if (shell->cmd_table[0].io[0][0] != '\0')
+				dup2(*fd_stand_in(), 0);
+			return ;
+		}
 	}
 	while (i < cmd_count)
 	{
 		shell->cmd_table[i].pid = fork();
 		if (shell->cmd_table[i].pid == 0)
 		{
-			set_dup2(shell, i, fd, cmd_count);
+			if (!set_dup2(shell, i, fd, cmd_count))
+				return ;
 			if (check_builtins(shell, i, "inpipe"))
+			{
+				clear_garbage();
 				exit(errno) ;
+			}
 			shell->cmd_table[i].cmd.path = get_valid_path(shell, i);
 			if (shell->cmd_table[i].cmd.path == NULL)
 			{

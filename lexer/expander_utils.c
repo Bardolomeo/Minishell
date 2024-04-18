@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 14:26:52 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/17 13:40:18 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/18 15:13:00 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,11 @@ int	redirect_no_expand(t_shell *shell, int i)
 {
 	if (i > 0)
 		i--;
+	if (i > 0 && (shell->input[i] == '\"' || shell->input[i] == '\''))
+		i--;
 	while (i >= 0 && shell->input[i] == ' ')
 		i--;
-	if (shell->input[i] == '<' || shell->input[i] == '>')
-	{
-		if (i - 1 >= 0 && shell->input[i - 1] == '<' && shell->input[i] == '<')
-			return (2);
-		ft_error(1, "minishell: ambiguos redirect \n");
+	if (i > 0 && shell->input[i] == '<' && shell->input[i - 1] == '<')
 		return (1);
-	}
 	return (0);
 }

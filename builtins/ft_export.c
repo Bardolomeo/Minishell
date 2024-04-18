@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:58 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/16 15:12:24 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/18 16:36:15 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void	ft_export(t_shell *shell, int i, char *pflag)
 	int		k;
 	t_str	arg;
 
-	if (ft_strncmp(pflag, "inpipe", 6) == 0)
+	if (ft_strncmp(pflag, "inpipe", 6) == 0 && shell->cmd_table[i].cmd.cmd_wargs[1] != NULL)
 		return ;
 	if (shell->cmd_table[i].cmd.cmd_wargs[1] == NULL)
 		export_no_args(shell);

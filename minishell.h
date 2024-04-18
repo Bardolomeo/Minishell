@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/17 13:19:08 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/18 16:32:10 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ typedef struct s_simcmd
 typedef struct s_cmd
 {
 	t_simcmd    cmd;
-    char		io[2][255];
+    char		io[3][255];
     pid_t       pid;
 } t_cmd;
 
@@ -89,6 +89,8 @@ void	ft_free_array(char **array);
 //singletons
 int 	*n_doc(void);
 char    ***ft_myenv(void);
+int     *fd_stand_out();
+int     *fd_stand_in();
 
 // utils
 char    *ft_getenv(char *str, int flag);

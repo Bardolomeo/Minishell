@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 17:32:13 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/15 14:37:08 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/18 15:54:108 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,16 @@ int *n_doc(void)
 {
     static int n_doc = 0;
     return(&n_doc);
+}
+
+int *fd_stand_in()
+{
+    static int fd_stand_in = 0;
+    return(&fd_stand_in);
+}
+
+int *fd_stand_out()
+{
+    static int fd_stand_out = 0;
+    return(&fd_stand_out);
 }

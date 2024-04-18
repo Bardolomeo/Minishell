@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lexer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/17 13:41:37 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/18 15:08:48 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char    *ft_getenv(char *str, int bra_flag)
 	myenv = *ft_myenv();
 	len = 0;
 	i = -1;
-	while (myenv[++i] && *str != '\"' && *str != '\'' && !is_reserved_export(*str) && *str!= '\0' && *str != ' ' && *str != '=')
+	while (myenv[++i] && *str != '\"' && *str != '\'' && !is_reserved_export(*str) && *str != '\0' && *str != ' ' && *str != '=')
 	{
 		if (bra_flag == 0)
 		{
@@ -35,7 +35,7 @@ char    *ft_getenv(char *str, int bra_flag)
 			while (str[len] && str[len] != '}')
 				len++;
 		}
-		if (ft_strncmp(myenv[i], str, len) == 0)
+		if (ft_strncmp(myenv[i], str, len) == 0 && myenv[i][len] == '=')
 			return(ft_strchr(myenv[i], '=') + 1);
 	}
 	return (NULL);
@@ -139,11 +139,6 @@ void    expander(t_shell *shell)
 			!is_reserved_export(shell->input[i + 1]) && shell->input[i + 1] != '\"' && shell->input[i + 1] != '\'')
 		{
 			if (redirect_no_expand(shell, i) == 1)
-			{
-				shell->input = NULL;
-				return ;
-			}
-			else if (redirect_no_expand(shell, i) == 2)
 			{
 				tmp2 = ft_strjoin(tmp2, ft_substr(shell->input, i, 1));
 				i++;
