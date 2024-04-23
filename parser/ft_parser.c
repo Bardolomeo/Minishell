@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parser.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 12:08:20 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/18 17:27:18 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/23 15:29:20 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,6 +312,9 @@ void	ft_parser(t_shell *shell)
 {
 	set_redirects(shell);
 	make_cmd_table(shell);
+	int i = -1;
+	while(shell->cmd_table[0].cmd.cmd_wargs[++i])
+		printf("%s\n", shell->cmd_table[0].cmd.cmd_wargs[i]);
 	//print_cmd_table(shell);
 	// printf("cmd_table[0].io[0]: %s\n", shell->cmd_table[0].io[0]);
 	// printf("cmd_table[0].io[1]: %s\n", shell->cmd_table[0].io[1]);

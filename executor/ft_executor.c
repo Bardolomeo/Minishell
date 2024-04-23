@@ -86,14 +86,14 @@ void		check_exit(t_shell *shell)
 			if (shell->cmd_table->cmd.cmd_wargs[1] && shell->cmd_table->cmd.cmd_wargs[2])
 			{
 				ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-				g_exit_status = 1;
+				*exit_status() = 1;
 			}
 			else
 			{
 				if (shell->cmd_table->cmd.cmd_wargs[1])
-					g_exit_status = ft_atoi(shell->cmd_table->cmd.cmd_wargs[1]);
+					*exit_status() = ft_atoi(shell->cmd_table->cmd.cmd_wargs[1]);
 				clear_garbage();
-				exit(g_exit_status);
+				exit(*exit_status());
 			}
 		}
 }
@@ -122,7 +122,7 @@ int	redir_dup2(t_shell *shell, int i, int cmd_count, int *fd)
 {
 	int fd_redir_in;
 	int fd_redir_out;
-	
+
 	*fd_stand_in() = dup(0);
 	*fd_stand_out() = dup(1);
 	if (shell->cmd_table[i].io[0][0] != '\0')
@@ -275,7 +275,7 @@ void	ft_executor(t_shell	*shell)
 		i--;
 		if (WIFEXITED(status))
 		{
-			g_exit_status = WEXITSTATUS(status);
+			*exit_status() = WEXITSTATUS(status);
 		}
 	}
 }

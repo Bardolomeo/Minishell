@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/18 16:32:10 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/23 14:03:16 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ int 	*n_doc(void);
 char    ***ft_myenv(void);
 int     *fd_stand_out();
 int     *fd_stand_in();
+int     *exit_status();
 
 // utils
 char    *ft_getenv(char *str, int flag);
@@ -114,7 +115,7 @@ int		count_cmds(t_shell *shell);
 
 // altsplit
 char	**ft_altsplit(char *s, char c);
-char	find_quotetype(const char *s, size_t i, char quote, int *in_arr);
+char	find_quotetype(const char *s, int *i, char quote, int *in_arr);
 int		find_unquoted(const char *s, char c, size_t start);
 int		find_quoted(const char *s, char quote, size_t start);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:58 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/18 16:36:15 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/23 15:16:51 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	export_error(void)
 {
 	ft_putstr_fd("minishell: export: ", 2);
 	ft_putstr_fd("': not a valid identifier\n", 2);
-	g_exit_status = 1;
+	*exit_status() = 1;
 	return (1);
 }
 
@@ -40,7 +40,7 @@ void	add_empty_env(char *env, char ***my_env)
 {
 	int 	i;
 	t_str	*new_env;
-	
+
 	i = 0;
 	while ((*my_env)[i] != NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:11:44 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/17 15:52:44 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/23 13:52:09 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ static char	*ft_make_altstring(char const *s, size_t start, char c, char quote)
 			squotes = 0;
 		while ((s[start] == '\'' && dquotes == 0) || (s[start] == '"' && squotes == 0))
 			start++;
+		if (s[start] == 0)
+			break ;
 		division[i++] = s[start++];
 	}
 	division[i] = '\0';
@@ -105,15 +107,16 @@ static char	**ft_make_altsplit(char **array, char const *s, char c)
 		return (NULL);
 	while (s[++i] != '\0')
 	{
-		quote = find_quotetype(s, i, quote, &in_arr);
-		if (s[i] != c && in_arr == 0 && s[i + 1] != '\'' && s[i + 1] != '\"')
+		quote = find_quotetype(s, &i, quote, &in_arr);
+		if (s[i] != c && in_arr == 0 && ((s[i + 1] != '\'' && s[i + 1] != '\"') || quote == 0))
 		{
 			array[arr_index++] = ft_make_altstring(s, i, c, quote);
 			if (array[arr_index - 1] == NULL)
 				return (ft_clear(array, arr_index));
 			in_arr = 1;
 		}
-		else if (s[i] == c && quote == 0)
+		else if ((s[i] == c && quote == 0) || ((quote == 0 && s[i + 1] == '"')
+				|| (quote == 0 && s[i + 1] == '\'')))
 			in_arr = 0;
 	}
 	if (arr_index > 0 && !ft_strncmp(array[arr_index - 1], "", 1))

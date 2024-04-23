@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 14:26:52 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/18 15:13:00 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/23 14:01:21 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
 
 	if (str[*index + 1] == '?' && brack_flag == 0)
 	{
-		str_exit_st = ft_itoa(g_exit_status);
+		str_exit_st = ft_itoa(*exit_status());
 		*tmp2 = ft_strjoin(*tmp2, str_exit_st);
 		(*index) += 2;
 		return (1);
@@ -27,7 +27,7 @@ int	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
 	{
 		if (str[*index + 2] == '?' && str[*index + 3] == '}')
 		{
-			str_exit_st = ft_itoa(g_exit_status);
+			str_exit_st = ft_itoa(*exit_status());
 			*tmp2 = ft_strjoin(*tmp2, str_exit_st);
 			(*index) += 4;
 			return (1);
@@ -35,7 +35,7 @@ int	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
 		else if (is_reserved_export(str[*index + 2]) || str[*index + 2] == ' ' || str[*index + 3] == ' ')
 		{
 			ft_putstr_fd("minishell ? : bad sostitution\n", 2);
-			g_exit_status = 1;
+			*exit_status() = 1;
 			return (2);
 		}
 	}

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/18 12:14:42 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/23 15:28:08 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_exit_status;
+//int g_exit_status;
 
 char	**ft_strdup_array(char **array)
 {
@@ -63,7 +63,7 @@ int main(int argc, char **argv, char **env)
 
 	argc += 0;
 	argv += 0;
-	g_exit_status = 0;
+	*exit_status() = 0;
 	shell = (t_shell *)ft_malloc(sizeof(t_shell));
 	if (shell == NULL)
 		return (1);

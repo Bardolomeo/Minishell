@@ -3,22 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   ft_find_functions.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:26:15 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/16 17:10:01 by mtani            ###   ########.fr       */
+/*   Updated: 2024/04/23 14:07:52 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	find_quotetype(const char *s, size_t i, char quote, int *in_arr)
+char	find_quotetype(const char *s, int *i, char quote, int *in_arr)
 {
-	if ((s[i] == '"' || s[i] == '\'') && quote == 0)
-		quote = s[i];
-	else if (s[i] == quote && quote != 0)
+	in_arr = (void *)in_arr;
+	if ((s[*i] == '"' || s[*i] == '\'') && quote == 0)
+		quote = s[*i];
+	else if (s[*i] == quote && quote != 0)
 	{
-		*in_arr = 0;
+		//*in_arr = 0;
+		if (s[*i + 1] == quote || s[*i - 1] == quote)
+			return (quote);
 		quote = 0;
 	}
 	return (quote);
@@ -59,12 +62,13 @@ int	find_quoted(const char *s, char quote, size_t start)
 		j++;
 		str_len++;
 	}
-	if (s[j + 1] != '\0' && s[j + 1] != ' ')
+	if (s[j] && s[j + 1] != '\0' && s[j + 1] != ' ')
 	{
 		while (s[j + 1] != ' ' && s[j + 1] != '\0')
 		{
+			if (s[j + 1] != quote)
+				str_len++;
 			j++;
-			str_len++;
 		}
 	}
 	return (str_len);
