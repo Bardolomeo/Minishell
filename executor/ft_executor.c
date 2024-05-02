@@ -276,7 +276,7 @@ void	ft_executor(t_shell	*shell)
 			shell->cmd_table[i].cmd.path = get_valid_path(shell, i);
 			if (shell->cmd_table[i].cmd.path == NULL)
 			{
-				ft_error(127, NULL);
+				ft_error(127, "Minishell: command not found");
 				clear_garbage();
 				exit(127);
 			}

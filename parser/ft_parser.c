@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 12:08:20 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/30 21:01:21 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/02 17:38:53 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,8 @@ int		count_cmds(t_shell *shell)
 	while (shell->args && shell->args[i])
 	{
 		if (ft_strncmp(shell->args[i], "|", 1) == 0)
-			count++;
+			if (shell->args[i + 1] != NULL)
+				count++;
 		i++;
 	}
 	return (count + 1);

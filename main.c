@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/30 19:26:23 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/02 17:38:47 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,23 @@ void	print_args(char **args)
 	}
 }
 
-void	check_input(t_shell *shell)
+int	check_input(t_shell *shell)
 {
 	int i;
 
 	i = 0;
-	while (shell->input[i] == ' ' || shell->input[i] == '\t')
+	while (shell->input[i] == ' ' || shell->input[i] == '\t' || shell->input[i] == '|')
+	{
+		if (shell->input[i] == '|')
+		{
+			add_history(shell->input);
+			printf("Minishell: Syntax Error near '|'\n");
+			return (0);
+		}
 		i++;
+	}
 	shell->input = shell->input + i;
+	return (1);
 }
 
 int main(int argc, char **argv, char **env)
@@ -72,7 +81,11 @@ int main(int argc, char **argv, char **env)
 	shell->input = ft_readline(RED "minishell$ " WHITE, 0);
 	while (shell->input)
 	{
-		check_input(shell);
+		if (!check_input(shell))
+		{
+			shell->input = ft_readline(RED "minishell$ " WHITE, 0);
+			continue ;
+		}
 		*(shell->my_env) = ft_strdup_array(*(shell->my_env));
 		if (ft_strlen(shell->input) > 0)
 		{
