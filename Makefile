@@ -6,7 +6,7 @@
 #    By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/04/30 17:49:02 by gsapio           ###   ########.fr        #
+#    Updated: 2024/05/02 15:47:04 by gsapio           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,10 +26,6 @@ LIBFT_PATH = libft
 
 OBJS	= $(SRCS:.c=.o)
 
-# BONUS			= main_bonus.c error_management_bonus.c pipex.c utils.c pipex_bonus.c
-
-# OBJS_BONUS		= $(BONUS:.c=.o)
-
 HEADER			= ./
 
 CC				= cc -g
@@ -40,7 +36,6 @@ CFLAGS			= -Wall -Wextra -Werror
 
 NAME			= minishell
 
-# BONUS_NAME		= pipex_bonus
 
 all:			$(NAME)
 
@@ -53,19 +48,12 @@ $(NAME):		$(OBJS)
 				$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(PATH_LIBS) $(LFLAGS)
 				#clear
 
-# bonus:			${BONUS_NAME}
-
-# ${BONUS_NAME}:	$(OBJS_BONUS)
-# 				make -C ./libft
-# 				$(CC) $(CFLAGS) ${OBJS_BONUS} -Llibft -lft -o pipex -no-pie
-
 clean:
 				$(RM) $(OBJS)
 				make clean -C $(LIBFT_PATH) --no-print-directory
 
 fclean:			clean
 				$(RM) $(NAME)
-				# $(RM) $(BONUS_NAME)
 
 re:				fclean all
 
