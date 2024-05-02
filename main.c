@@ -6,13 +6,13 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/23 15:28:08 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/30 19:26:23 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//int g_exit_status;
+int		g_signal;
 
 char	**ft_strdup_array(char **array)
 {
@@ -63,13 +63,13 @@ int main(int argc, char **argv, char **env)
 
 	argc += 0;
 	argv += 0;
-	*exit_status() = 0;
 	shell = (t_shell *)ft_malloc(sizeof(t_shell));
 	if (shell == NULL)
 		return (1);
 	shell->my_env = ft_myenv();
 	*(shell->my_env) = ft_strdup_array(env);
-	shell->input = ft_readline(RED "minishell$ " WHITE);
+	set_signals("interactive");
+	shell->input = ft_readline(RED "minishell$ " WHITE, 0);
 	while (shell->input)
 	{
 		check_input(shell);
@@ -78,9 +78,11 @@ int main(int argc, char **argv, char **env)
 		{
 			add_history(shell->input);
 			ft_lexer(shell);
-			ft_parser(shell);
-			ft_executor(shell);
+			if (ft_parser(shell))
+				ft_executor(shell);
+			g_signal = 0;
 		}
-		shell->input = ft_readline(RED "minishell$ " WHITE);
+		set_signals("interactive");
+		shell->input = ft_readline(RED "minishell$ " WHITE, 0);
 	}
 }

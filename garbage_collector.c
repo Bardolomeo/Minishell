@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:04 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/17 13:57:32 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/30 19:36:03 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,29 @@ void	clear_garbage()
 	{
 		fname = ft_strjoin("./tmp/heredoc", ft_itoa(i));
 		unlink(fname);
+	}
+	*garbage_collector() = NULL;
+	rl_clear_history();
+}
+
+void	clear_garbage_no_unlink()
+{
+	t_list	*node;
+	t_list	*tmp;
+	int		i;
+
+	i = -1;
+	node = *garbage_collector();
+	while (node)
+	{
+		tmp = node->next;
+		if (node)
+		{
+			if (node->content)
+				free(node->content);
+			free(node);
+		}
+		node = tmp;
 	}
 	*garbage_collector() = NULL;
 	rl_clear_history();

@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/23 14:03:16 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/30 20:29:31 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,15 @@
 # include <sys/wait.h>
 # include <pthread.h>
 # include <sys/resource.h>
+# include <signal.h>
 
 
 # define RED "\001\x1b[1;31m\002"
 # define WHITE "\001\x1b[1;0m\002"
-extern int g_exit_status;
+extern int g_signal;
 
 typedef char *t_str;
+typedef __sighandler_t t_sig;
 
 typedef struct s_simcmd
 {
@@ -77,14 +79,14 @@ void	ft_echo(t_shell *shell, int i);
 void	ft_env(t_shell *shell, int i);
 void	ft_export(t_shell *shell, int i, char *pflag);
 void	ft_unset(t_shell *shell, int i);
-// void	ft_exec(t_shell *shell, int i);
-// int		ft_exit(t_shell *shell, int i);
+
 
 // Garbage collector
 void	*ft_malloc(size_t size);
 void	clear_garbage(void);
 t_list	**garbage_collector(void);
 void	ft_free_array(char **array);
+void	clear_garbage_no_unlink();
 
 //singletons
 int 	*n_doc(void);
@@ -96,7 +98,7 @@ int     *exit_status();
 // utils
 char    *ft_getenv(char *str, int flag);
 void    ft_error(int exit_code, char *str);
-char	*ft_readline(const char *str);
+char	*ft_readline(const char *str, int heredoc);
 int		is_reserved_export(char ch);
 
 // lexer and expander
@@ -106,17 +108,21 @@ void	handle_quotes(t_shell *shell, int i, int *quotes);
 int	    redirect_no_expand(t_shell *shell, int i);
 
 // parser
-void	ft_parser(t_shell *shell);
-int		create_heredoc(char *limiter, char *line, int *n_doc);
+int 	ft_parser(t_shell *shell);
+int		create_heredoc(char *limiter, int *n_doc);
 
 // executor
 void	ft_executor(t_shell *shell);
 int		count_cmds(t_shell *shell);
 
+// signals
+void    set_signals(const char* flag);
+void	sighandle_command(int signal);
+
 // altsplit
 char	**ft_altsplit(char *s, char c);
 char	find_quotetype(const char *s, int *i, char quote, int *in_arr);
 int		find_unquoted(const char *s, char c, size_t start);
-int		find_quoted(const char *s, char quote, size_t start);
+int		find_quoted(const char *s, char quote, size_t start, char c);
 
 #endif

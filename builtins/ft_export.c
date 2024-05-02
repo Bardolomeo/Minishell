@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:58 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/23 15:16:51 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/26 19:36:25 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,21 @@ int	export_error(void)
 void	export_no_args(t_shell *shell)
 {
 	int		i;
-
+	int		j;
 	i = 0;
 	while ((*shell->my_env)[i])
 	{
 		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd((*shell->my_env)[i] , 1);
+		j = -1;
+		while ((*shell->my_env)[i][++j] != '=')
+			ft_putchar_fd((*shell->my_env)[i][j] , 1);
+		if ((*shell->my_env)[i][j])
+		{
+			ft_putchar_fd((*shell->my_env)[i][j], 1);
+			ft_putchar_fd('\"', 1);
+			ft_putstr_fd((*shell->my_env)[i] + j + 1, 1);
+			ft_putchar_fd('\"', 1);
+		}
 		ft_putchar_fd('\n', 1);
 		i++;
 	}

@@ -6,11 +6,25 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:11:44 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/23 13:52:09 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/26 19:25:01 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	special_check(char *to_check, char quote)
+{
+	if (quote)
+	{
+		if (*to_check == '<')
+			*to_check = -23;
+		if (*to_check == '>')
+			*to_check = -22;
+		if (*to_check == '|')
+			*to_check = -21;
+	}
+
+}
 
 static size_t	ft_altcount_arr(char const *s, char c)
 {
@@ -23,22 +37,23 @@ static size_t	ft_altcount_arr(char const *s, char c)
 	count = 0;
 	in_arr = 0;
 	quote = 0;
+	quote = 0;
 	if (s == NULL)
 		return (0);
-	while (s[i] != '\0')
+	while (s[i])
 	{
-		if ((s[i] == '"' || s[i] == '\'') && quote == 0)
-			quote = s[i];
-		else if (s[i] == quote && quote != 0)
-			quote = 0;
-		if (s[i] != c && in_arr == 0)
+		while (s[i] && (s[i] == '\"' || s[i] == '\''))
 		{
-			count++;
-			in_arr = 1;
+			if (quote == 0)
+				quote = s[i];
+			else if (s[i] == quote)
+				quote = 0;
+			i++;
 		}
-		else if (s[i] == c && quote == 0)
-			in_arr = 0;
-		i++;
+		if (s[i] == c && quote == 0)
+			count++;
+		if (s[i] != 0)
+			i++;
 	}
 	return (count);
 }
@@ -48,36 +63,40 @@ static char	*ft_make_altstring(char const *s, size_t start, char c, char quote)
 	char	*division;
 	size_t	i;
 	size_t	str_len;
-	int		dquotes;
-	int		squotes;
 
 	i = 0;
 	str_len = 0;
-	dquotes = 0;
-	squotes = 0;
 	if (s[i] == '\0' || s == 0)
 		return (NULL);
 	if (quote == 0)
 		str_len = find_unquoted(s, c, start);
 	else
-		str_len = find_quoted(s, quote, start);
+		str_len = find_quoted(s, quote, start, c);
 	division = (char *)ft_calloc(str_len + 1, sizeof(char));
 	if (division == NULL)
 		return (NULL);
+	quote = 0;
 	while (i < str_len)
 	{
-		if (s[start] == '"' && dquotes == 0 && squotes == 0)
-			dquotes = 1;
-		else if (s[start] == '"' && dquotes == 1)
-			dquotes = 0;
-		if (s[start] == '\'' && squotes == 0 && dquotes == 0)
-			squotes = 1;
-		else if (s[start] == '\'' && squotes == 1)
-			squotes = 0;
-		while ((s[start] == '\'' && dquotes == 0) || (s[start] == '"' && squotes == 0))
-			start++;
-		if (s[start] == 0)
+		while (s[start] && (s[start] == '\"' || s[start] == '\''))
+		{
+			if (quote == 0)
+			{
+				quote = s[start];
+				start++;
+			}
+			else if (s[start] == quote)
+			{
+				quote = 0;
+				start++;
+			}
+			else
+				break ;
+		}
+		if (s[start] == 0 || (s[start] == c && quote == 0))
 			break ;
+		if (c == ' ')
+			special_check((char *)&s[start], quote);
 		division[i++] = s[start++];
 	}
 	division[i] = '\0';
@@ -108,21 +127,21 @@ static char	**ft_make_altsplit(char **array, char const *s, char c)
 	while (s[++i] != '\0')
 	{
 		quote = find_quotetype(s, &i, quote, &in_arr);
-		if (s[i] != c && in_arr == 0 && ((s[i + 1] != '\'' && s[i + 1] != '\"') || quote == 0))
+		if (s[i] != c && in_arr == 0)
 		{
 			array[arr_index++] = ft_make_altstring(s, i, c, quote);
 			if (array[arr_index - 1] == NULL)
 				return (ft_clear(array, arr_index));
 			in_arr = 1;
 		}
-		else if ((s[i] == c && quote == 0) || ((quote == 0 && s[i + 1] == '"')
-				|| (quote == 0 && s[i + 1] == '\'')))
+		else if ((s[i] == c && quote == 0))
 			in_arr = 0;
 	}
 	if (arr_index > 0 && !ft_strncmp(array[arr_index - 1], "", 1))
 		array[arr_index - 1] = 0;
 	else
-		array[arr_index] = 0;
+		if (array)
+			array[arr_index] = 0;
 	return (array);
 }
 

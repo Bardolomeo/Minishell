@@ -6,7 +6,7 @@
 #    By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/04/23 14:02:10 by gsapio           ###   ########.fr        #
+#    Updated: 2024/04/30 17:49:02 by gsapio           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ SRCS	= main.c garbage_collector.c ft_altsplit.c ft_find_functions.c \
 	./utils/ft_singletons.c ./utils/ft_error.c ./utils/ft_readline.c utils/is_reserved.c utils/ft_singletons_ii.c\
 	./lexer/ft_lexer.c ./lexer/expander_utils.c \
 	./parser/ft_parser.c \
-	./executor/ft_executor.c
+	./executor/ft_executor.c \
+	./signals/ft_signals.c
 
 LFLAGS = -lft -lreadline
 
@@ -50,7 +51,7 @@ $(NAME):		$(OBJS)
 				make -C $(LIBFT_PATH) --no-print-directory
 				make bonus -C $(LIBFT_PATH) --no-print-directory
 				$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(PATH_LIBS) $(LFLAGS)
-				clear
+				#clear
 
 # bonus:			${BONUS_NAME}
 

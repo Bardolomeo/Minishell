@@ -6,11 +6,60 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 12:08:20 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/23 15:29:20 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/30 21:01:21 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	heredoc_signal_exit(int fd)
+{
+	close(fd);
+	clear_garbage_no_unlink();
+	exit (1);
+}
+
+void	create_heredoc_child(char *limiter, int fd)
+{
+	char	*line;
+
+	set_signals("heredoc");
+	line = ft_readline(">", 1);
+	if (line == NULL)
+		heredoc_signal_exit(fd);
+	while (ft_strncmp(line, limiter, ft_strlen(limiter)) != 0)
+	{
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+		line = ft_readline(">", 1);
+		if (line == NULL)
+			heredoc_signal_exit(fd);
+	}
+	close(fd);
+	clear_garbage_no_unlink();
+	exit(1);
+}
+int	create_heredoc_parent(int pid, int *status, int fd)
+{
+	int	ex_status;
+
+	set_signals("ignore");
+	wait4(pid, status, WUNTRACED, NULL);
+	set_signals("command");
+	if (WIFEXITED(*status))
+	{
+		ex_status = WEXITSTATUS(*status);
+		close(fd);
+		if (ex_status == 0)
+		{
+			*exit_status() = 130;
+			return (0);
+		}
+		return(1);
+	}
+	*exit_status() = errno;
+	return (0);
+}
 
 void	namefile_quotes(t_shell *shell, int *i, int j, int n_io)
 {
@@ -43,24 +92,26 @@ void	namefile_no_quotes(t_shell *shell, int *tmp, int j, int n_io)
 	}
 	shell->cmd_table[j].io[n_io][k] = '\0';
 }
-int	create_heredoc(char *limiter, char *line, int *n_doc)
+
+int	create_heredoc(char *limiter, int *n_doc)
 {
 	int		fd;
 	char	*fname;
+	int		pid;
+	int		status;
 
 	fname = ft_strjoin("./tmp/heredoc", ft_itoa(*n_doc));
 	fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 		return (1);
 	(*n_doc)++;
-	line = ft_readline(">");
-	while (ft_strncmp(line, limiter, ft_strlen(limiter)) != 0)
+	pid = fork();
+	if (pid == 0)
+		create_heredoc_child(limiter, fd);
+	else
 	{
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		line = ft_readline(">");
+		return (create_heredoc_parent(pid, &status, fd));
 	}
-	close(fd);
 	return (0);
 }
 
@@ -107,14 +158,17 @@ void	make_cmd_table(t_shell *shell)
 	{
 		if (singlecommands)
 		{
-			singlecommands[i] = ft_strtrim(singlecommands[i], " ");
-			shell->cmd_table[i].cmd.cmd_wargs = ft_altsplit(singlecommands[i], ' ');
+			if (singlecommands[i])
+			{
+				singlecommands[i] = ft_strtrim(singlecommands[i], " ");
+				shell->cmd_table[i].cmd.cmd_wargs = ft_altsplit(singlecommands[i], ' ');
+			}
 		}
 		i++;
 	}
 }
 
-void	redirect_heredoc(t_shell *shell, int j, int *i)
+int	redirect_heredoc(t_shell *shell, int j, int *i)
 {
 	char		*limiter;
 	char		*line;
@@ -133,8 +187,11 @@ void	redirect_heredoc(t_shell *shell, int j, int *i)
 	k = 0;
 	while (shell->input[tmp] && (shell->input[tmp] != ' ' || quote == 1))
 	{
-		if (shell->input[tmp] == '>' || shell->input[tmp] == '<') // TODO: implementare errore
-			break;
+		if (shell->input[tmp] == '>' || shell->input[tmp] == '<' || shell->input[tmp] == '|')
+		{
+			printf("Minishell: syntax error near `%c`\n", shell->input[tmp]);
+			return (0);
+		}
 		if (k == 0 && (shell->input[tmp] == '"' || shell->input[tmp] == '\''))
 		{
 			shell->input[tmp] = ' ';
@@ -154,8 +211,15 @@ void	redirect_heredoc(t_shell *shell, int j, int *i)
 		k++;
 	}
 	limiter[k] = '\0';
-	if (create_heredoc(limiter, line, n_doc()) == 1)
-		return ;
+	if (limiter[0] == 0)
+	{
+		printf("Minishell: syntax error near `<`\n");
+		return (0);
+	}
+	if (!create_heredoc(limiter, n_doc()))
+	{
+		return (0);
+	}
 	line = ft_strjoin("./tmp/heredoc", ft_itoa(*n_doc() - 1));
 	k = 0;
 	while (line[k])
@@ -165,6 +229,7 @@ void	redirect_heredoc(t_shell *shell, int j, int *i)
 	}
 	shell->cmd_table[j].io[0][k] = '\0';
 	*i = tmp;
+	return (1);
 }
 
 int	redirect_append(t_shell *shell, int j, int *i)
@@ -251,7 +316,7 @@ void	initialize_cmd_table(t_shell *shell, int cmd_count)
 	}
 }
 
-void	set_redirects(t_shell *shell)
+int	set_redirects(t_shell *shell)
 {
 	int		cmd_count;
 	int		i;
@@ -268,25 +333,29 @@ void	set_redirects(t_shell *shell)
 		if (shell->input[i] == '<' && shell->input[i + 1] != '<')
 		{
 			if (!redirect_input(shell, j, &i))
-				return ;
+				return (0);
 		}
 		else if (shell->input[i] == '<' && shell->input[i + 1] == '<')
-			redirect_heredoc(shell, j, &i);
+		{
+			if (!redirect_heredoc(shell, j, &i))
+				return (0);
+		}
 		else if (shell->input[i] == '>' && shell->input[i + 1] == '>')
 		{
 			if (!redirect_append(shell, j, &i))
-				return ;
+				return (0);
 		}
 		else if (shell->input[i] == '>' && shell->input[i + 1] != '>')
 		{
 			if (!redirect_output(shell, &i, j))
-				return ;
+				return (0);
 		}
 		if (shell->input[i] && shell->input[i] == '|')
 			j++;
 		if (shell->input[i])
 			i++;
 	}
+	return (1);
 }
 
 void	print_cmd_table(t_shell *shell)
@@ -308,16 +377,12 @@ void	print_cmd_table(t_shell *shell)
 	}
 }
 
-void	ft_parser(t_shell *shell)
+int	ft_parser(t_shell *shell)
 {
-	set_redirects(shell);
+	if (!set_redirects(shell))
+	{
+		return (0);
+	}
 	make_cmd_table(shell);
-	int i = -1;
-	while(shell->cmd_table[0].cmd.cmd_wargs[++i])
-		printf("%s\n", shell->cmd_table[0].cmd.cmd_wargs[i]);
-	//print_cmd_table(shell);
-	// printf("cmd_table[0].io[0]: %s\n", shell->cmd_table[0].io[0]);
-	// printf("cmd_table[0].io[1]: %s\n", shell->cmd_table[0].io[1]);
-	// printf("cmd_table[1].io[1]: %s\n", shell->cmd_table[1].io[1]);
-	// printf("cmd_table[1].io[0]: %s\n", shell->cmd_table[1].io[0]);
+	return (1);
 }

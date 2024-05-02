@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:26:15 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/23 14:07:52 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/04/26 17:30:11 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,8 @@ char	find_quotetype(const char *s, int *i, char quote, int *in_arr)
 	in_arr = (void *)in_arr;
 	if ((s[*i] == '"' || s[*i] == '\'') && quote == 0)
 		quote = s[*i];
-	else if (s[*i] == quote && quote != 0)
+	else if (s[*i] == quote)
 	{
-		//*in_arr = 0;
-		if (s[*i + 1] == quote || s[*i - 1] == quote)
-			return (quote);
 		quote = 0;
 	}
 	return (quote);
@@ -50,26 +47,33 @@ int	find_unquoted(const char *s, char c, size_t start)
 	return (str_len);
 }
 
-int	find_quoted(const char *s, char quote, size_t start)
+int	find_quoted(const char *s, char quote, size_t start, char c)
 {
-	size_t		j;
-	int			str_len;
+	int	str_len;
 
-	j = start + 1;
+	quote = 0;
 	str_len = 0;
-	while (s[j] != quote && s[j] && quote != 0)
+	while (s[start] && (s[start] != c || quote != 0))
 	{
-		j++;
-		str_len++;
-	}
-	if (s[j] && s[j + 1] != '\0' && s[j + 1] != ' ')
-	{
-		while (s[j + 1] != ' ' && s[j + 1] != '\0')
+		while (s[start] && (s[start] == '\"' || s[start] == '\''))
 		{
-			if (s[j + 1] != quote)
-				str_len++;
-			j++;
+			if (quote == 0)
+			{
+				quote = s[start];
+				start++;
+			}
+			else if (s[start] == quote)
+			{
+				quote = 0;
+				start++;
+			}
+			else
+				break;
 		}
+		if (!s[start] || (s[start] == c && quote == 0))
+			break;
+		str_len++;
+		start++;
 	}
 	return (str_len);
 }
