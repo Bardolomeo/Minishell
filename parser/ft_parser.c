@@ -6,17 +6,42 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 12:08:20 by mtani             #+#    #+#             */
-/*   Updated: 2024/05/02 17:38:53 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/06 17:37:14 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+int	heredoc_input_setter(t_shell *shell, char *limiter, int j, int k)
+{
+	char	*line;
+
+	limiter[k] = '\0';
+	if (limiter[0] == 0)
+	{
+		printf("Minishell: syntax error near `<`\n");
+		return (0);
+	}
+	if (!create_heredoc(limiter, n_doc()))
+	{
+		return (0);
+	}
+	line = ft_strjoin("./tmp/heredoc", ft_itoa(*n_doc() - 1));
+	k = 0;
+	while (line[k])
+	{
+		shell->cmd_table[j].io[0][k] = line[k];
+		k++;
+	}
+	shell->cmd_table[j].io[0][k] = '\0';
+	return (1);
+}
+
 void	heredoc_signal_exit(int fd)
 {
 	close(fd);
 	clear_garbage_no_unlink();
-	exit (1);
+	exit(1);
 }
 
 void	create_heredoc_child(char *limiter, int fd)
@@ -55,7 +80,7 @@ int	create_heredoc_parent(int pid, int *status, int fd)
 			*exit_status() = 130;
 			return (0);
 		}
-		return(1);
+		return (1);
 	}
 	*exit_status() = errno;
 	return (0);
@@ -115,10 +140,10 @@ int	create_heredoc(char *limiter, int *n_doc)
 	return (0);
 }
 
-int		count_cmds(t_shell *shell)
+int	count_cmds(t_shell *shell)
 {
-	int		i;
-	int		count;
+	int	i;
+	int	count;
 
 	i = 0;
 	count = 0;
@@ -148,7 +173,7 @@ void	make_cmd_table(t_shell *shell)
 {
 	char	**singlecommands;
 	int		cmd_count;
-	int 	i;
+	int		i;
 
 	i = 0;
 	singlecommands = NULL;
@@ -162,22 +187,71 @@ void	make_cmd_table(t_shell *shell)
 			if (singlecommands[i])
 			{
 				singlecommands[i] = ft_strtrim(singlecommands[i], " ");
-				shell->cmd_table[i].cmd.cmd_wargs = ft_altsplit(singlecommands[i], ' ');
+				shell->cmd_table[i].cmd.cmd_wargs = ft_altsplit(singlecommands[i],
+						' ');
 			}
 		}
 		i++;
 	}
 }
 
-int	redirect_heredoc(t_shell *shell, int j, int *i)
+int	red_doc_loop_no_quotes(t_shell *shell, int *tmp, char *quotes)
 {
-	char		*limiter;
-	char		*line;
-	int			k;
-	int			tmp;
-	int			quote;
+	if ((shell->input[*tmp] == '"' || shell->input[*tmp] == '\''))
+	{
+		if (*quotes == 0)
+		{
+			*quotes = shell->input[*tmp];
+			shell->input[*tmp] = ' ';
+			(*tmp)++;
+			return (1);
+		}
+		else if (*quotes == shell->input[*tmp])
+		{
+			*quotes = 0;
+			shell->input[*tmp] = ' ';
+			return (0);
+		}
+	}
+	if ((shell->input[*tmp + 1] == ' ' || shell->input[*tmp + 1] == '\0')
+		&& (*quotes == 0))
+	{
+		shell->input[*tmp] = ' ';
+		return (0) ;
+	}
+	return (1);
+}
+
+int	redirect_heredoc_loop(t_shell *shell, int *tmp, int *k, char *limiter)
+{
+	char	quote;
 
 	quote = 0;
+	while (shell->input[*tmp] && (shell->input[*tmp] != ' ' || quote != 0))
+	{
+		if (shell->input[*tmp] == '>' || shell->input[*tmp] == '<'
+			|| shell->input[*tmp] == '|')
+		{
+			printf("Minishell: syntax error near `%c`\n", shell->input[*tmp]);
+			return (0);
+		}
+		if (!red_doc_loop_no_quotes(shell, tmp, &quote))
+			break;
+		limiter[*k] = shell->input[*tmp];
+		shell->input[*tmp] = ' ';
+		(*k)++;
+		(*tmp)++;
+	}
+	return (1);
+}
+
+int	redirect_heredoc(t_shell *shell, int j, int *i)
+{
+	char	*limiter;
+	char	*line;
+	int		k;
+	int		tmp;
+
 	line = NULL;
 	limiter = ft_malloc(sizeof(char) * 100);
 	tmp = *i;
@@ -186,58 +260,19 @@ int	redirect_heredoc(t_shell *shell, int j, int *i)
 	while (shell->input[tmp] && shell->input[tmp] == ' ')
 		tmp++;
 	k = 0;
-	while (shell->input[tmp] && (shell->input[tmp] != ' ' || quote == 1))
-	{
-		if (shell->input[tmp] == '>' || shell->input[tmp] == '<' || shell->input[tmp] == '|')
-		{
-			printf("Minishell: syntax error near `%c`\n", shell->input[tmp]);
-			return (0);
-		}
-		if (k == 0 && (shell->input[tmp] == '"' || shell->input[tmp] == '\''))
-		{
-			shell->input[tmp] = ' ';
-			tmp++;
-			quote = 1;
-			continue;
-		}
-		if ((shell->input[tmp + 1] == ' ' || shell->input[tmp + 1] == '\0')
-			&& (shell->input[tmp] == '"' || shell->input[tmp] == '\''))
-			{
-				shell->input[tmp] = ' ';
-				break;
-			}
-		limiter[k] = shell->input[tmp];
-		shell->input[tmp] = ' ';
-		tmp++;
-		k++;
-	}
-	limiter[k] = '\0';
-	if (limiter[0] == 0)
-	{
-		printf("Minishell: syntax error near `<`\n");
+	if (!redirect_heredoc_loop(shell, &tmp, &k, limiter))
 		return (0);
-	}
-	if (!create_heredoc(limiter, n_doc()))
-	{
+	if (!heredoc_input_setter(shell, limiter, j, k))
 		return (0);
-	}
-	line = ft_strjoin("./tmp/heredoc", ft_itoa(*n_doc() - 1));
-	k = 0;
-	while (line[k])
-	{
-		shell->cmd_table[j].io[0][k] = line[k];
-		k++;
-	}
-	shell->cmd_table[j].io[0][k] = '\0';
 	*i = tmp;
 	return (1);
 }
 
 int	redirect_append(t_shell *shell, int j, int *i)
 {
-	int		fd;
-	int		k;
-	int		tmp;
+	int	fd;
+	int	k;
+	int	tmp;
 
 	tmp = *i;
 	while (tmp < *i + 2)
@@ -261,10 +296,10 @@ int	redirect_append(t_shell *shell, int j, int *i)
 
 int	redirect_input(t_shell *shell, int j, int *i)
 {
-	int fd;
+	int	fd;
 
 	shell->input[*i] = ' ';
-	(*i)++;								// poi apriamo il file in sola lettura e controlliamo se esiste
+	(*i)++; // poi apriamo il file in sola lettura e controlliamo se esiste
 	while (shell->input[*i] && shell->input[*i] == ' ')
 		(*i)++;
 	if (shell->input[*i] == '\"' || shell->input[*i] == '\'')
@@ -281,7 +316,7 @@ int	redirect_input(t_shell *shell, int j, int *i)
 
 int	redirect_output(t_shell *shell, int *i, int j)
 {
-	int fd;
+	int	fd;
 
 	shell->input[*i] = ' ';
 	(*i)++;
@@ -302,8 +337,8 @@ int	redirect_output(t_shell *shell, int *i, int j)
 
 void	initialize_cmd_table(t_shell *shell, int cmd_count)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
@@ -319,9 +354,9 @@ void	initialize_cmd_table(t_shell *shell, int cmd_count)
 
 int	set_redirects(t_shell *shell)
 {
-	int		cmd_count;
-	int		i;
-	int		j;
+	int	cmd_count;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
@@ -361,8 +396,8 @@ int	set_redirects(t_shell *shell)
 
 void	print_cmd_table(t_shell *shell)
 {
-	int		i;
-	int		j;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
@@ -371,7 +406,8 @@ void	print_cmd_table(t_shell *shell)
 		j = 0;
 		while (shell->cmd_table[i].cmd.cmd_wargs[j])
 		{
-			printf("cmd_table[%d].cmd.cmd_wargs[%d]: %s\n", i, j, shell->cmd_table[i].cmd.cmd_wargs[j]);
+			printf("cmd_table[%d].cmd.cmd_wargs[%d]: %s\n", i, j,
+				shell->cmd_table[i].cmd.cmd_wargs[j]);
 			j++;
 		}
 		i++;

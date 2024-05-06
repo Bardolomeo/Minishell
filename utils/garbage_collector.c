@@ -6,11 +6,11 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:04 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/02 17:43:41 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/06 11:48:09 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	ft_free_array(char **array)
 {
@@ -25,7 +25,7 @@ void	ft_free_array(char **array)
 	free(array);
 }
 
-void	clear_garbage()
+void	clear_garbage(void)
 {
 	t_list	*node;
 	t_list	*tmp;
@@ -54,7 +54,7 @@ void	clear_garbage()
 	rl_clear_history();
 }
 
-void	clear_garbage_no_unlink()
+void	clear_garbage_no_unlink(void)
 {
 	t_list	*node;
 	t_list	*tmp;

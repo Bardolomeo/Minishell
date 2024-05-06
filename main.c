@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:42:25 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/02 17:38:47 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/06 11:44:40 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,11 @@ void	print_args(char **args)
 
 int	check_input(t_shell *shell)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while (shell->input[i] == ' ' || shell->input[i] == '\t' || shell->input[i] == '|')
+	while (shell->input[i] == ' ' || shell->input[i] == '\t'
+		|| shell->input[i] == '|')
 	{
 		if (shell->input[i] == '|')
 		{
@@ -66,7 +67,27 @@ int	check_input(t_shell *shell)
 	return (1);
 }
 
-int main(int argc, char **argv, char **env)
+void	command_loop(t_shell *shell)
+{
+	if (!check_input(shell))
+	{
+		shell->input = ft_readline(RED "minishell$ " WHITE, 0);
+		return ;
+	}
+	*(shell->my_env) = ft_strdup_array(*(shell->my_env));
+	if (ft_strlen(shell->input) > 0)
+	{
+		add_history(shell->input);
+		ft_lexer(shell);
+		if (ft_parser(shell))
+			ft_executor(shell);
+		g_signal = 0;
+	}
+	set_signals("interactive");
+	shell->input = ft_readline(RED "minishell$ " WHITE, 0);
+}
+
+int	main(int argc, char **argv, char **env)
 {
 	t_shell	*shell;
 
@@ -80,22 +101,5 @@ int main(int argc, char **argv, char **env)
 	set_signals("interactive");
 	shell->input = ft_readline(RED "minishell$ " WHITE, 0);
 	while (shell->input)
-	{
-		if (!check_input(shell))
-		{
-			shell->input = ft_readline(RED "minishell$ " WHITE, 0);
-			continue ;
-		}
-		*(shell->my_env) = ft_strdup_array(*(shell->my_env));
-		if (ft_strlen(shell->input) > 0)
-		{
-			add_history(shell->input);
-			ft_lexer(shell);
-			if (ft_parser(shell))
-				ft_executor(shell);
-			g_signal = 0;
-		}
-		set_signals("interactive");
-		shell->input = ft_readline(RED "minishell$ " WHITE, 0);
-	}
+		command_loop(shell);
 }

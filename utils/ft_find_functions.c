@@ -6,11 +6,11 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:26:15 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/26 17:30:11 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/06 11:48:02 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	find_quotetype(const char *s, int *i, char quote, int *in_arr)
 {

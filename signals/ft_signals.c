@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 15:24:42 by gsapio            #+#    #+#             */
-/*   Updated: 2024/04/30 20:38:56 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/06 13:30:06 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	sighandle_heredoc(int signal)
 	}
 }
 
-void	set_signals(const char* flag)
+void	set_signals(const char *flag)
 {
 	if (ft_strncmp(flag, "interactive", ft_strlen(flag) + 1) == 0)
 	{

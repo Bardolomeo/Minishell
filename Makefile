@@ -6,13 +6,15 @@
 #    By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/05/02 15:47:04 by gsapio           ###   ########.fr        #
+#    Updated: 2024/05/06 13:13:29 by gsapio           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS	= main.c garbage_collector.c ft_altsplit.c ft_find_functions.c \
+SRCS	= main.c \
+	./split/ft_altsplit.c ./split/ft_altsplit_utils.c\
 	./builtins/ft_cd.c ./builtins/ft_pwd.c ./builtins/ft_echo.c ./builtins/ft_env.c ./builtins/ft_export.c ./builtins/ft_unset.c \
-	./utils/ft_singletons.c ./utils/ft_error.c ./utils/ft_readline.c utils/is_reserved.c utils/ft_singletons_ii.c\
+	./utils/ft_single.c ./utils/ft_error.c ./utils/ft_readline.c ./utils/is_reserved.c ./utils/ft_single_ii.c utils/garbage_collector.c \
+	./utils/ft_find_functions.c \
 	./lexer/ft_lexer.c ./lexer/expander_utils.c \
 	./parser/ft_parser.c \
 	./executor/ft_executor.c \
