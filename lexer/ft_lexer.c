@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 16:49:55 by mtani             #+#    #+#             */
-/*   Updated: 2024/05/08 15:12:58 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/08 15:35:45 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,49 +141,57 @@ int	long_ass_condition(t_shell *shell, int *quotes, int i)
 	return (0);
 }
 
+void	init_expander(t_exp_vars *vars)
+{
+	vars->bra_flag = 0;
+	vars->quotes[0] = 0;
+	vars->quotes[1] = 0;
+	vars->f_break = 1;
+	vars->i = 0;
+	vars->tmp2 = NULL;
+}
+
+int	expander_loop(t_shell *shell, t_exp_vars *vars)
+{
+	handle_quotes(shell, vars->i, vars->quotes);
+	if (long_ass_condition(shell, vars->quotes, vars->i))
+	{
+		if (redirect_no_expand(shell, vars->i) == 1)
+		{
+			vars->tmp2 = ft_strjoin(vars->tmp2, ft_substr(shell->input, vars->i, 1));
+			vars->i++;
+			return (0);
+		}
+		if (shell->input[vars->i + 1] == 123)
+			vars->f_break = handle_brackets(shell->input, &vars->i, &vars->bra_flag, &vars->tmp2);
+		else
+			vars->f_break = expand_wo_brackets(shell->input, &vars->i, &vars->tmp2,
+					&vars->bra_flag);
+	}
+	else
+	{
+		vars->tmp2 = ft_strjoin(vars->tmp2, ft_substr(shell->input, vars->i, 1));
+		vars->i++;
+	}
+	return (1);
+}
+
 void	expander(t_shell *shell)
 {
-	int		i;
-	int		bra_flag;
-	int		quotes[2];
-	char	*tmp2;
+	t_exp_vars	vars;
 
-	int f_break ;
-	bra_flag = 0;
-	quotes[0] = 0;
-	quotes[1] = 0;
-	f_break = 1;
-	i = 0;
-	tmp2 = NULL;
-	while (shell->input[i])
+	init_expander(&vars);
+	while (shell->input[vars.i])
 	{
-		handle_quotes(shell, i, quotes);
-		if (long_ass_condition(shell, quotes, i))
-		{
-			if (redirect_no_expand(shell, i) == 1)
-			{
-				tmp2 = ft_strjoin(tmp2, ft_substr(shell->input, i, 1));
-				i++;
-				continue ;
-			}
-			if (shell->input[i + 1] == 123)
-				f_break = handle_brackets(shell->input, &i, &bra_flag, &tmp2);
-			else
-				f_break = expand_wo_brackets(shell->input, &i, &tmp2,
-						&bra_flag);
-		}
-		else
-		{
-			tmp2 = ft_strjoin(tmp2, ft_substr(shell->input, i, 1));
-			i++;
-		}
-		if (f_break == 0)
+		if (!expander_loop(shell, &vars))
+			continue ;
+		if (vars.f_break == 0)
 		{
 			shell->input = NULL;
 			return ;
 		}
 	}
-	shell->input = tmp2;
+	shell->input = vars.tmp2;
 }
 
 void	ft_lexer(t_shell *shell)

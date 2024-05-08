@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/08 13:58:47 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/08 15:20:56 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,15 @@ extern int				g_signal;
 
 typedef char			*t_str;
 typedef __sighandler_t	t_sig;
+
+typedef struct s_exp_vars
+{
+	int					i;
+	int					bra_flag;
+	int					quotes[2];
+	char				*tmp2;
+	int					f_break ;
+}						t_exp_vars;
 
 typedef struct s_simcmd
 {
