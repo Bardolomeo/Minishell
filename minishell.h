@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/06 13:28:34 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/08 13:58:47 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,25 @@ int						redirect_no_expand(t_shell *shell, int i);
 // parser
 int						ft_parser(t_shell *shell);
 int						create_heredoc(char *limiter, int *n_doc);
+void					heredoc_signal_exit(int fd);
+int						heredoc_input_setter(t_shell *shell, char *limiter,
+							int j, int k);
+int						red_doc_loop_no_quotes(t_shell *shell, int *tmp,
+							char *quotes);
+int						redirect_heredoc_loop(t_shell *shell, int *tmp, int *k,
+							char *limiter);
+int						redirect_heredoc(t_shell *shell, int j, int *i);
+int						create_heredoc_parent(int pid, int *status, int fd);
+void					create_heredoc_child(char *limiter, int fd);
+int						create_heredoc(char *limiter, int *n_doc);
+int						redirect_output(t_shell *shell, int *i, int j);
+int						redirect_input(t_shell *shell, int j, int *i);
+int						redirect_append(t_shell *shell, int j, int *i);
+void					namefile_no_quotes(t_shell *shell, int *tmp, int j,
+							int n_io);
+void					namefile_quotes(t_shell *shell, int *i, int j,
+							int n_io);
+void					initialize_cmd_table(t_shell *shell, int cmd_count);
 
 // executor
 void					ft_executor(t_shell *shell);

@@ -6,7 +6,7 @@
 #    By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/05/06 13:13:29 by gsapio           ###   ########.fr        #
+#    Updated: 2024/05/08 14:02:20 by gsapio           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRCS	= main.c \
 	./utils/ft_single.c ./utils/ft_error.c ./utils/ft_readline.c ./utils/is_reserved.c ./utils/ft_single_ii.c utils/garbage_collector.c \
 	./utils/ft_find_functions.c \
 	./lexer/ft_lexer.c ./lexer/expander_utils.c \
-	./parser/ft_parser.c \
+	./parser/ft_parser.c ./parser/create_heredoc.c ./parser/redirect_heredoc.c ./parser/redirections.c\
 	./executor/ft_executor.c \
 	./signals/ft_signals.c
 
