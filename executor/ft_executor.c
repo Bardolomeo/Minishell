@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	reset_io(t_shell *shell)
+int	reset_io(t_shell *shell)
 {
 	if (shell->cmd_table[0].io[1][0] != '\0')
 		dup2(*fd_stand_out(), 1);
@@ -20,7 +20,7 @@ void	reset_io(t_shell *shell)
 		dup2(*fd_stand_out(), 1);
 	if (shell->cmd_table[0].io[0][0] != '\0')
 		dup2(*fd_stand_in(), 0);
-	return ;
+	return (0);
 }
 void	convert_special(t_shell *shell, int n_cmd)
 {
@@ -88,32 +88,28 @@ int	check_builtins(t_shell *shell, int i, char *pflag)
 
 char	*get_valid_path(t_shell *shell, int i)
 {
-	char	**env;
-	char	**paths;
-	char	*path;
-	int		j;
-	int		k;
+	t_gpv_vars	vars;
 
-	j = 0;
-	k = 0;
-	env = *shell->my_env;
+	vars.j = 0;
+	vars.k = 0;
+	vars.env = *shell->my_env;
 	if (shell->cmd_table[i].cmd.cmd_wargs[0][0] == '/' || shell->cmd_table[i].cmd.cmd_wargs[0][0] == '.')
 		return (shell->cmd_table[i].cmd.cmd_wargs[0]);
-	while (env[j] != NULL)
+	while (vars.env[vars.j] != NULL)
 	{
-		if (ft_strncmp(env[j], "PATH=", 5) == 0)
+		if (ft_strncmp(vars.env[vars.j], "PATH=", 5) == 0)
 		{
-			paths = ft_split(env[j] + 5, ':');
-			while (paths[k] != NULL)
+			vars.paths = ft_split(vars.env[vars.j] + 5, ':');
+			while (vars.paths[vars.k] != NULL)
 			{
-				path = ft_strjoin(paths[k], "/");
-				path = ft_strjoin(path, shell->cmd_table[i].cmd.cmd_wargs[0]);
-				if (access(path, F_OK) == 0)
-					return (path);
-				k++;
+				vars.path = ft_strjoin(vars.paths[vars.k], "/");
+				vars.path = ft_strjoin(vars.path, shell->cmd_table[i].cmd.cmd_wargs[0]);
+				if (access(vars.path, F_OK) == 0)
+					return (vars.path);
+				vars.k++;
 			}
 		}
-		j++;
+		vars.j++;
 	}
 	return (NULL);
 }
@@ -157,13 +153,10 @@ void	init_mid_pipe(int *fd, int i)
 	close(fd[i * 2 + 1]);
 }
 
-int	redir_dup2(t_shell *shell, int i, int cmd_count, int *fd)
+int	dup2_input(t_shell *shell, int i, int cmd_count, int *fd)
 {
 	int fd_redir_in;
-	int fd_redir_out;
 
-	*fd_stand_in() = dup(0);
-	*fd_stand_out() = dup(1);
 	if (shell->cmd_table[i].io[0][0] != '\0')
 	{
 		fd_redir_in = open(shell->cmd_table[i].io[0], O_RDONLY);
@@ -184,13 +177,25 @@ int	redir_dup2(t_shell *shell, int i, int cmd_count, int *fd)
 		else if (cmd_count > 1)
 			close(fd[(i - 1) * 2]);
 	}
+	return (1);
+}
+
+int	dup2_output(t_shell *shell, int i, int cmd_count, int *fd)
+{
+	int	fd_redir_out;
+
 	if (shell->cmd_table[i].io[1][0] != '\0')
 	{
 		fd_redir_out = open(shell->cmd_table[i].io[1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd_redir_out < 0)
 		{
 			ft_error(errno, NULL);
-			exit(errno);
+			if (cmd_count > 1)
+			{
+				clear_garbage();
+				exit(errno);
+			}
+			return (0);
 		}
 		dup2(fd_redir_out, 1);
 		close(fd_redir_out);
@@ -199,13 +204,25 @@ int	redir_dup2(t_shell *shell, int i, int cmd_count, int *fd)
 		else if (cmd_count > 1)
 			close(fd[i * 2 + 1]);
 	}
+	return (1);
+}
+
+int	dup2_append(t_shell *shell, int i, int cmd_count, int *fd)
+{
+	int	fd_redir_out;
+
 	if (shell->cmd_table[i].io[2][0] != '\0')
 	{
 		fd_redir_out = open(shell->cmd_table[i].io[2], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd_redir_out < 0)
 		{
 			ft_error(errno, NULL);
-			exit(errno);
+			if (cmd_count > 1)
+			{
+				clear_garbage();
+				exit(errno);
+			}
+			return (0);
 		}
 		dup2(fd_redir_out, 1);
 		close(fd_redir_out);
@@ -214,6 +231,19 @@ int	redir_dup2(t_shell *shell, int i, int cmd_count, int *fd)
 		else if (cmd_count > 1)
 			close(fd[i * 2 + 1]);
 	}
+	return (1);
+}
+
+int	redir_dup2(t_shell *shell, int i, int cmd_count, int *fd)
+{
+	*fd_stand_in() = dup(0);
+	*fd_stand_out() = dup(1);
+	if (!dup2_input(shell, i, cmd_count, fd))
+		return (0);
+	if (!dup2_output(shell, i, cmd_count, fd))
+		return (0);
+	if (!dup2_append(shell, i, cmd_count, fd))
+		return (0);
 	return (1);
 }
 
@@ -236,6 +266,74 @@ int	set_dup2(t_shell *shell, int i, int *fd, int cmd_count)
 	return (1);
 }
 
+void	execute_child(t_shell *shell, int i, int *fd, int cmd_count)
+{
+	if (!set_dup2(shell, i, fd, cmd_count))
+		return ;
+	if (check_builtins(shell, i, "inpipe"))
+	{
+		clear_garbage();
+		exit(errno) ;
+	}
+	shell->cmd_table[i].cmd.path = get_valid_path(shell, i);
+	if (shell->cmd_table[i].cmd.path == NULL)
+	{
+		ft_error(127, "Minishell: command not found");
+		clear_garbage();
+		exit(127);
+	}
+	execve(shell->cmd_table[i].cmd.path, shell->cmd_table[i].cmd.cmd_wargs, *shell->my_env);
+	ft_error(errno, NULL);
+	clear_garbage();
+	exit(errno);
+}
+
+void	execute_parent(int cmd_count, int i, int *fd)
+{
+	if (cmd_count > 1)
+	{
+		if (i == 0)
+			close(fd[1]);
+		else if (i == cmd_count - 1)
+			close(fd[(i - 1) * 2]);
+		else
+		{
+			close(fd[(i - 1) * 2]);
+			close(fd[i * 2 + 1]);
+		}
+	}
+}
+
+void	update_exit_status(int *i, int *status)
+{
+	(*i)--;
+	if (WIFEXITED(*status))
+	{
+		*exit_status() = WEXITSTATUS(*status);
+	}
+	if (g_signal == SIGINT)
+		*exit_status() = 130;
+	else if (g_signal == SIGQUIT)
+		*exit_status() = 131;
+}
+
+int	check_single_command(int cmd_count, int **fd, t_shell *shell)
+{
+	if (cmd_count > 1)
+	{
+		*fd = (int *)ft_malloc(sizeof(int) * ((cmd_count - 1) * 2));
+		connect_pipe(*fd, cmd_count);
+	}
+	else if (cmd_count == 1)
+	{
+		if (!set_dup2(shell, 0, NULL, cmd_count))
+			return (0);
+		if (check_builtins(shell, 0, "outpipe"))
+			return(reset_io(shell)) ;
+	}
+	return (1);
+}
+
 void	ft_executor(t_shell	*shell)
 {
 	int		cmd_count;
@@ -245,74 +343,23 @@ void	ft_executor(t_shell	*shell)
 
 	i = 0;
 	status = 0;
+	fd = NULL;
 	cmd_count = count_cmds(shell);
 	convert_special(shell, cmd_count);
 	check_exit(shell);
-	if (cmd_count > 1)
-	{
-		fd = (int *)ft_malloc(sizeof(int) * ((cmd_count - 1) * 2));
-		connect_pipe(fd, cmd_count);
-	}
-	else if (cmd_count == 1)
-	{
-		if (!set_dup2(shell, 0, NULL, cmd_count))
-			return ;
-		if (check_builtins(shell, 0, "outpipe"))
-			return(reset_io(shell)) ;
-	}
+	if (!check_single_command(cmd_count, &fd, shell))
+		return ;
 	while (i < cmd_count)
 	{
 		set_signals("command");
 		shell->cmd_table[i].pid = fork();
 		if (shell->cmd_table[i].pid == 0)
-		{
-			if (!set_dup2(shell, i, fd, cmd_count))
-				return ;
-			if (check_builtins(shell, i, "inpipe"))
-			{
-				clear_garbage();
-				exit(errno) ;
-			}
-			shell->cmd_table[i].cmd.path = get_valid_path(shell, i);
-			if (shell->cmd_table[i].cmd.path == NULL)
-			{
-				ft_error(127, "Minishell: command not found");
-				clear_garbage();
-				exit(127);
-			}
-			execve(shell->cmd_table[i].cmd.path, shell->cmd_table[i].cmd.cmd_wargs, *shell->my_env);
-			ft_error(errno, NULL);
-			clear_garbage();
-			exit(errno);
-		}
+			execute_child(shell, i, fd, cmd_count);
 		else
-		{
-			if (cmd_count > 1)
-			{
-				if (i == 0)
-					close(fd[1]);
-				else if (i == cmd_count - 1)
-					close(fd[(i - 1) * 2]);
-				else
-				{
-					close(fd[(i - 1) * 2]);
-					close(fd[i * 2 + 1]);
-				}
-			}
-		}
+			execute_parent(cmd_count, i, fd);
 		i++;
 	}
 	while (i > 0 && wait4(shell->cmd_table[i - 1].pid, &status, WUNTRACED, NULL) > 0)
-	{
-		i--;
-		if (WIFEXITED(status))
-		{
-			*exit_status() = WEXITSTATUS(status);
-		}
-		if (g_signal == SIGINT)
-			*exit_status() = 130;
-		else if (g_signal == SIGQUIT)
-			*exit_status() = 131;
-	}
+		update_exit_status(&i, &status);
 	reset_io(shell);
 }

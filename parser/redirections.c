@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 13:54:29 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/08 13:56:11 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/08 17:55:36 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,10 @@ int	redirect_append(t_shell *shell, int j, int *i)
 	if (fd >= 0)
 		close(fd);
 	else
+	{
+		ft_error(errno, "minishell: Permission Denied");
 		return (0);
+	}
 	return (1);
 }
 
@@ -86,7 +89,10 @@ int	redirect_input(t_shell *shell, int j, int *i)
 	if (fd >= 0)
 		close(fd);
 	else
+	{
+		ft_error(errno, "minishell: permission denied or non-existent file");
 		return (0);
+	}
 	return (1);
 }
 
@@ -107,6 +113,9 @@ int	redirect_output(t_shell *shell, int *i, int j)
 	if (fd >= 0)
 		close(fd);
 	else
+	{
+		ft_error(1, "minishell: Permission Denied");
 		return (0);
+	}
 	return (1);
 }

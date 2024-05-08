@@ -6,11 +6,27 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/06 14:26:52 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/08 15:49:16 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/08 17:13:49 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	get_env_loop(char *str, int bra_flag, int *len)
+{
+	if (bra_flag == 0)
+	{
+		while (str[*len] && str[*len] != ' ' && str[*len] != '$'
+			&& !is_reserved_export(str[*len]) && str[*len] != '\0'
+			&& str[*len] != '\"' && str[*len] != '\'' && str[*len] != '=')
+			(*len)++;
+	}
+	else
+	{
+		while (str[*len] && str[*len] != '}')
+			(*len)++;
+	}
+}
 
 int	question_mark_handler(char *str, int *index, char **tmp2, int brack_flag)
 {

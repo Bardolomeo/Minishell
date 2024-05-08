@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/08 15:20:56 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/08 17:27:01 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct s_exp_vars
 	int					bra_flag;
 	int					quotes[2];
 	char				*tmp2;
-	int					f_break ;
+	int f_break ;
 }						t_exp_vars;
 
 typedef struct s_simcmd
@@ -65,6 +65,15 @@ typedef struct s_shell
 	t_cmd				*cmd_table;
 	char				***my_env;
 }						t_shell;
+
+typedef struct s_gpv_vars
+{
+	char				**env;
+	char				**paths;
+	char				*path;
+	int					j;
+	int					k;
+}						t_gpv_vars;
 
 // Builtins
 void					ft_cd(t_shell *shell, int i);
@@ -100,6 +109,16 @@ int						question_mark_handler(char *str, int *index,
 							char **tmp2, int brack_flag);
 void					handle_quotes(t_shell *shell, int i, int *quotes);
 int						redirect_no_expand(t_shell *shell, int i);
+int						expand_wo_brackets(char *str, int *i, char **tmp2,
+							int *bra_flag);
+int						find_end_bracket(char *str, int *i, int *j, int *index);
+int						handle_brackets(char *str, int *index, int *bra_flag,
+							char **tmp2);
+int						long_ass_condition(t_shell *shell, int *quotes, int i);
+void					init_expander(t_exp_vars *vars);
+void					get_env_loop(char *str, int bra_flag, int *len);
+int						fill_input(char *str, int *i, char **tmp2,
+							int bra_flag);
 
 // parser
 int						ft_parser(t_shell *shell);
