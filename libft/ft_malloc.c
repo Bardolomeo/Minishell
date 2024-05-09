@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_malloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mint <mint@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 15:58:22 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/27 15:39:30 by mint             ###   ########.fr       */
+/*   Updated: 2024/05/09 16:46:53 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void *ft_malloc(size_t size)
+void	*ft_malloc(size_t size)
 {
 	t_list	*node;
 	void	*ptr;

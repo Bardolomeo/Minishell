@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_error.c                                          :+:      :+:    :+:   */
+/*   ft_error.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/28 17:44:42 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/12 16:25:41 by gsapio           ###   ########.fr       */
+/*   Created: 2024/05/09 16:51:44 by mtani             #+#    #+#             */
+/*   Updated: 2024/05/09 16:51:46 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void ft_error(int exit_code, char *str)
+void	ft_error(int exit_code, char *str)
 {
-    if (str == NULL)
-        perror("minishell");
-    else
+	if (str == NULL)
+		perror("minishell");
+	else
 	{
-        ft_putstr_fd(str, 2);
-   		write(1, "\n", 1);
+		ft_putstr_fd(str, 2);
+		write(1, "\n", 1);
 	}
 	*exit_status() = exit_code;
 }

@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/09 10:25:24 by mtani             #+#    #+#             */
-/*   Updated: 2024/03/27 16:00:20 by mtani            ###   ########.fr       */
+/*   Updated: 2024/05/09 16:46:22 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,6 @@ void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 void	*ft_malloc(size_t size);
-t_list	**garbage_collector();
+t_list	**garbage_collector(void);
 
 #endif

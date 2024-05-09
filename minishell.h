@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/09 16:20:49 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/09 16:45:12 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,14 @@ typedef struct s_gpv_vars
 	int					j;
 	int					k;
 }						t_gpv_vars;
+
+typedef struct s_exec_vars
+{
+	int					cmd_count;
+	int					status;
+	int					*fd;
+	int					i;
+}						t_exec_vars;
 
 // Builtins
 void					ft_cd(t_shell *shell, int i);
@@ -150,6 +158,19 @@ void					initialize_cmd_table(t_shell *shell, int cmd_count);
 // executor
 void					ft_executor(t_shell *shell);
 int						count_cmds(t_shell *shell);
+void					check_exit(t_shell *shell);
+int						check_single_command(int cmd_count, int **fd,
+							t_shell *shell);
+void					execute_child(t_shell *shell, int i, int *fd,
+							int cmd_count);
+void					execute_parent(int cmd_count, int i, int *fd);
+void					connect_pipe(int *fd, int cmd_count);
+int						set_dup2(t_shell *shell, int i, int *fd, int cmd_count);
+int						check_builtins(t_shell *shell, int i, char *pflag);
+int						reset_io(t_shell *shell);
+void					init_first_pipe(int *fd, int i);
+void					init_mid_pipe(int *fd, int i);
+void					init_last_pipe(int *fd, int i);
 
 // signals
 void					set_signals(const char *flag);

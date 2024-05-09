@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+         #
+#    By: mtani <mtani@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/05/09 16:21:08 by gsapio           ###   ########.fr        #
+#    Updated: 2024/05/09 16:40:14 by mtani            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ SRCS	= main.c \
 	./utils/ft_find_functions.c \
 	./lexer/ft_lexer.c ./lexer/expander_utils.c ./lexer/expander_brackets.c\
 	./parser/ft_parser.c ./parser/create_heredoc.c ./parser/redirect_heredoc.c ./parser/redirections.c\
-	./executor/ft_executor.c \
+	./executor/ft_executor.c ./executor/ft_checks.c ./executor/ft_init_pipes.c ./executor/ft_parent_child.c ./executor/ft_redirects.c \
 	./signals/ft_signals.c
 
 LFLAGS = -lft -lreadline

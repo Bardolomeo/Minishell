@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_find_functions.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 10:26:15 by mtani             #+#    #+#             */
-/*   Updated: 2024/05/06 11:48:02 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/09 16:59:55 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,23 @@ int	find_unquoted(const char *s, char c, size_t start)
 	return (str_len);
 }
 
+int	quoted_loop(char *quote, const char *s, size_t *start)
+{
+	if (*quote == 0)
+	{
+		*quote = s[*start];
+		(*start)++;
+	}
+	else if (s[*start] == *quote)
+	{
+		*quote = 0;
+		(*start)++;
+	}
+	else
+		return (0);
+	return (1);
+}
+
 int	find_quoted(const char *s, char quote, size_t start, char c)
 {
 	int	str_len;
@@ -57,21 +74,11 @@ int	find_quoted(const char *s, char quote, size_t start, char c)
 	{
 		while (s[start] && (s[start] == '\"' || s[start] == '\''))
 		{
-			if (quote == 0)
-			{
-				quote = s[start];
-				start++;
-			}
-			else if (s[start] == quote)
-			{
-				quote = 0;
-				start++;
-			}
-			else
-				break;
+			if (!quoted_loop(&quote, s, &start))
+				break ;
 		}
 		if (!s[start] || (s[start] == c && quote == 0))
-			break;
+			break ;
 		str_len++;
 		start++;
 	}
