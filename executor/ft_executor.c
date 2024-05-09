@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/15 09:46:47 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/18 15:49:331 by mtani            ###   ########.fr       */
+/*   Created: 2024/05/09 15:54:23 by mtani             #+#    #+#             */
+/*   Updated: 2024/05/09 15:55:14 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@ int	reset_io(t_shell *shell)
 		dup2(*fd_stand_in(), 0);
 	return (0);
 }
+
 void	convert_special(t_shell *shell, int n_cmd)
 {
-	int		i;
-	int		j;
-	int		k;
+	int	i;
+	int	j;
+	int	k;
 
 	i = 0;
 	while (i < n_cmd)
@@ -53,7 +54,7 @@ void	convert_special(t_shell *shell, int n_cmd)
 
 void	connect_pipe(int *fd, int cmd_count)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (i < cmd_count - 1)
@@ -73,7 +74,8 @@ int	check_builtins(t_shell *shell, int i, char *pflag)
 		ft_cd(shell, i);
 	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "echo", 5) == 0)
 		ft_echo(shell, i);
-	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "export", 7) == 0)
+	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0],
+			"export", 7) == 0)
 		ft_export(shell, i, pflag);
 	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "unset", 6) == 0)
 		ft_unset(shell, i);
@@ -91,22 +93,23 @@ char	*get_valid_path(t_shell *shell, int i)
 	t_gpv_vars	vars;
 
 	vars.j = 0;
-	vars.k = 0;
+	vars.k = -1;
 	vars.env = *shell->my_env;
-	if (shell->cmd_table[i].cmd.cmd_wargs[0][0] == '/' || shell->cmd_table[i].cmd.cmd_wargs[0][0] == '.')
+	if (shell->cmd_table[i].cmd.cmd_wargs[0][0] == '/'
+		|| shell->cmd_table[i].cmd.cmd_wargs[0][0] == '.')
 		return (shell->cmd_table[i].cmd.cmd_wargs[0]);
 	while (vars.env[vars.j] != NULL)
 	{
 		if (ft_strncmp(vars.env[vars.j], "PATH=", 5) == 0)
 		{
 			vars.paths = ft_split(vars.env[vars.j] + 5, ':');
-			while (vars.paths[vars.k] != NULL)
+			while (vars.paths[++vars.k] != NULL)
 			{
 				vars.path = ft_strjoin(vars.paths[vars.k], "/");
-				vars.path = ft_strjoin(vars.path, shell->cmd_table[i].cmd.cmd_wargs[0]);
+				vars.path = ft_strjoin(vars.path,
+						shell->cmd_table[i].cmd.cmd_wargs[0]);
 				if (access(vars.path, F_OK) == 0)
 					return (vars.path);
-				vars.k++;
 			}
 		}
 		vars.j++;
@@ -114,23 +117,63 @@ char	*get_valid_path(t_shell *shell, int i)
 	return (NULL);
 }
 
-void		check_exit(t_shell *shell)
+int	check_exit_args(t_shell *shell)
 {
-	if (shell->cmd_table->cmd.cmd_wargs[0] && ft_strncmp(shell->cmd_table->cmd.cmd_wargs[0], "exit", 4) == 0)
+	int	i;
+	int	is_neg;
+
+	i = 0;
+	if (!shell->cmd_table->cmd.cmd_wargs[1])
+		return (1);
+	if (shell->cmd_table->cmd.cmd_wargs[1][0] == '-')
+		is_neg = 1;
+	if (shell->cmd_table->cmd.cmd_wargs[1][0] == '-')
+		i++;
+	while (shell->cmd_table->cmd.cmd_wargs[1][i])
+	{
+		if (!ft_isdigit(shell->cmd_table->cmd.cmd_wargs[1][i]))
+			return (0);
+		i++;
+	}
+	if (is_neg)
+		i--;
+	if (i >= 18)
+	{
+		if (ft_strncmp(shell->cmd_table->cmd.cmd_wargs[1],
+				"9223372036854775807", 20) > 0)
+			return (0);
+	}
+	return (1);
+}
+
+void	check_exit(t_shell *shell)
+{
+	if (shell->cmd_table->cmd.cmd_wargs[0]
+		&& ft_strncmp(shell->cmd_table->cmd.cmd_wargs[0], "exit", 4) == 0)
+	{
+		if (shell->cmd_table->cmd.cmd_wargs[1]
+			&& shell->cmd_table->cmd.cmd_wargs[2])
 		{
-			if (shell->cmd_table->cmd.cmd_wargs[1] && shell->cmd_table->cmd.cmd_wargs[2])
+			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+			*exit_status() = 1;
+		}
+		else
+		{
+			if (!check_exit_args(shell))
 			{
-				ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-				*exit_status() = 1;
-			}
-			else
-			{
-				if (shell->cmd_table->cmd.cmd_wargs[1])
-					*exit_status() = ft_atoi(shell->cmd_table->cmd.cmd_wargs[1]);
+				ft_putstr_fd("minishell: exit: ", 2);
+				ft_putstr_fd(shell->cmd_table->cmd.cmd_wargs[1], 2);
+				ft_putstr_fd(": numeric argument required\n", 2);
+				*exit_status() = 2;
 				clear_garbage();
 				exit(*exit_status());
 			}
+			if (shell->cmd_table->cmd.cmd_wargs[1])
+				*exit_status() = ft_atoi(shell->cmd_table->cmd.cmd_wargs[1]);
+			clear_garbage();
+			exit(*exit_status());
 		}
+	}
 }
 
 void	init_first_pipe(int *fd, int i)
@@ -155,7 +198,7 @@ void	init_mid_pipe(int *fd, int i)
 
 int	dup2_input(t_shell *shell, int i, int cmd_count, int *fd)
 {
-	int fd_redir_in;
+	int	fd_redir_in;
 
 	if (shell->cmd_table[i].io[0][0] != '\0')
 	{
@@ -186,7 +229,8 @@ int	dup2_output(t_shell *shell, int i, int cmd_count, int *fd)
 
 	if (shell->cmd_table[i].io[1][0] != '\0')
 	{
-		fd_redir_out = open(shell->cmd_table[i].io[1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		fd_redir_out = open(shell->cmd_table[i].io[1],
+				O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd_redir_out < 0)
 		{
 			ft_error(errno, NULL);
@@ -213,7 +257,8 @@ int	dup2_append(t_shell *shell, int i, int cmd_count, int *fd)
 
 	if (shell->cmd_table[i].io[2][0] != '\0')
 	{
-		fd_redir_out = open(shell->cmd_table[i].io[2], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		fd_redir_out = open(shell->cmd_table[i].io[2],
+				O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd_redir_out < 0)
 		{
 			ft_error(errno, NULL);
@@ -273,7 +318,7 @@ void	execute_child(t_shell *shell, int i, int *fd, int cmd_count)
 	if (check_builtins(shell, i, "inpipe"))
 	{
 		clear_garbage();
-		exit(errno) ;
+		exit(errno);
 	}
 	shell->cmd_table[i].cmd.path = get_valid_path(shell, i);
 	if (shell->cmd_table[i].cmd.path == NULL)
@@ -282,7 +327,8 @@ void	execute_child(t_shell *shell, int i, int *fd, int cmd_count)
 		clear_garbage();
 		exit(127);
 	}
-	execve(shell->cmd_table[i].cmd.path, shell->cmd_table[i].cmd.cmd_wargs, *shell->my_env);
+	execve(shell->cmd_table[i].cmd.path, shell->cmd_table[i].cmd.cmd_wargs,
+		*shell->my_env);
 	ft_error(errno, NULL);
 	clear_garbage();
 	exit(errno);
@@ -329,19 +375,19 @@ int	check_single_command(int cmd_count, int **fd, t_shell *shell)
 		if (!set_dup2(shell, 0, NULL, cmd_count))
 			return (0);
 		if (check_builtins(shell, 0, "outpipe"))
-			return(reset_io(shell)) ;
+			return (reset_io(shell));
 	}
 	return (1);
 }
 
-void	ft_executor(t_shell	*shell)
+void	ft_executor(t_shell *shell)
 {
-	int		cmd_count;
-	int		status;
-	int		*fd;
-	int		i;
+	int	cmd_count;
+	int	status;
+	int	*fd;
+	int	i;
 
-	i = 0;
+	i = -1;
 	status = 0;
 	fd = NULL;
 	cmd_count = count_cmds(shell);
@@ -349,7 +395,7 @@ void	ft_executor(t_shell	*shell)
 	check_exit(shell);
 	if (!check_single_command(cmd_count, &fd, shell))
 		return ;
-	while (i < cmd_count)
+	while (++i < cmd_count)
 	{
 		set_signals("command");
 		shell->cmd_table[i].pid = fork();
@@ -357,9 +403,9 @@ void	ft_executor(t_shell	*shell)
 			execute_child(shell, i, fd, cmd_count);
 		else
 			execute_parent(cmd_count, i, fd);
-		i++;
 	}
-	while (i > 0 && wait4(shell->cmd_table[i - 1].pid, &status, WUNTRACED, NULL) > 0)
+	while (i > 0 && wait4(shell->cmd_table[i - 1].pid, &status, WUNTRACED,
+			NULL) > 0)
 		update_exit_status(&i, &status);
 	reset_io(shell);
 }
