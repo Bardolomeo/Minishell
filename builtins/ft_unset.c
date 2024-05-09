@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:26:07 by mtani             #+#    #+#             */
-/*   Updated: 2024/05/09 16:26:42 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/09 17:15:35 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,37 +22,42 @@ static int	ft_arrlen(char **arr)
 	return (i);
 }
 
+void	ft_unsetenv_loop(t_shell *shell, t_uns_ind *ind, char ***new_env,
+		t_str arg)
+{
+	if (ft_strncmp((*shell->my_env)[ind->i], arg, ft_strlen(arg)))
+	{
+		(*new_env)[ind->j] = ft_strdup((*shell->my_env)[ind->i]);
+		ind->j++;
+	}
+	if (ft_strncmp((*shell->my_env)[ind->i], arg, ft_strlen(arg)) == 0)
+	{
+		if (!((*shell->my_env)[ind->i][ft_strlen(arg)] == '=')
+			&& !((*shell->my_env)[ind->i][ft_strlen(arg)] == 0))
+		{
+			(*new_env)[ind->j] = ft_strdup((*shell->my_env)[ind->i]);
+			ind->j++;
+		}
+	}
+	ind->i++;
+}
+
 static void	ft_unsetenv(char *arg, t_shell *shell)
 {
-	int		i;
-	int		j;
-	char	**new_env;
+	t_uns_ind	ind;
+	char		**new_env;
 
-	i = 0;
-	j = 0;
+	ind.i = 0;
+	ind.j = 0;
 	new_env = (char **)ft_malloc(sizeof(char *) * (ft_arrlen(*(shell->my_env))
 				+ 1));
 	if (!new_env)
 		exit(1);
-	while ((*shell->my_env)[i])
+	while ((*shell->my_env)[ind.i])
 	{
-		if (ft_strncmp((*shell->my_env)[i], arg, ft_strlen(arg)))
-		{
-			new_env[j] = ft_strdup((*shell->my_env)[i]);
-			j++;
-		}
-		if (ft_strncmp((*shell->my_env)[i], arg, ft_strlen(arg)) == 0)
-		{
-			if (!((*shell->my_env)[i][ft_strlen(arg)] == '=')
-				&& !((*shell->my_env)[i][ft_strlen(arg)] == 0))
-			{
-				new_env[j] = ft_strdup((*shell->my_env)[i]);
-				j++;
-			}
-		}
-		i++;
+		ft_unsetenv_loop(shell, &ind, &new_env, arg);
 	}
-	new_env[j] = NULL;
+	new_env[ind.j] = NULL;
 	*(shell->my_env) = new_env;
 }
 

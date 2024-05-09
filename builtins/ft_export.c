@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:58 by mtani             #+#    #+#             */
-/*   Updated: 2024/05/09 16:22:48 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/09 17:27:50 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ int	export_check_errors(int *k, t_str *arg, const char *s)
 	*arg = ft_strdup(s);
 	while ((*arg)[*k] != '\0' && (*arg)[*k] != '=')
 	{
-		if (is_reserved_export((*arg)[*k]))
+		if (is_reserved_export((*arg)[*k])
+			|| ft_isdigit(*arg[0]))
 		{
 			export_error();
 			return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/09 16:45:12 by mtani            ###   ########.fr       */
+/*   Updated: 2024/05/09 17:30:19 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,19 @@ extern int				g_signal;
 typedef char			*t_str;
 typedef __sighandler_t	t_sig;
 
+typedef struct s_uns_ind
+{
+	int					i;
+	int					j;
+}						t_uns_ind;
+
 typedef struct s_exp_vars
 {
 	int					i;
 	int					bra_flag;
 	int					quotes[2];
 	char				*tmp2;
-	int f_break ;
+	int					f_break ;
 }						t_exp_vars;
 
 typedef struct s_simcmd
