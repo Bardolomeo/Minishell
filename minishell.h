@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/09 17:30:19 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/09 17:39:21 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ typedef struct s_exec_vars
 
 // Builtins
 void					ft_cd(t_shell *shell, int i);
-void					ft_pwd(t_shell *shell, int i);
+void					ft_pwd(void);
 void					ft_echo(t_shell *shell, int i);
 void					ft_env(t_shell *shell, int i);
 void					ft_export(t_shell *shell, int i, char *pflag);

@@ -6,7 +6,7 @@
 /*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:27:51 by mtani             #+#    #+#             */
-/*   Updated: 2024/05/09 16:34:44 by mtani            ###   ########.fr       */
+/*   Updated: 2024/05/09 17:43:24 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	check_exit_args(t_shell *shell)
 		return (1);
 	if (shell->cmd_table->cmd.cmd_wargs[1][0] == '-')
 		is_neg = 1;
-	if (shell->cmd_table->cmd.cmd_wargs[1][0] == '-')
+	if (shell->cmd_table->cmd.cmd_wargs[1][0] == '-' || shell->cmd_table->cmd.cmd_wargs[1][0] == '+')
 		i++;
 	while (shell->cmd_table->cmd.cmd_wargs[1][++i])
 	{
@@ -57,6 +57,7 @@ void	check_exit(t_shell *shell)
 		{
 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 			*exit_status() = 1;
+			clean_exit();
 		}
 		else
 		{
@@ -97,7 +98,7 @@ int	check_builtins(t_shell *shell, int i, char *pflag)
 	if (!shell->cmd_table[i].cmd.cmd_wargs[0])
 		return (1);
 	if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "pwd", 4) == 0)
-		ft_pwd(shell, i);
+		ft_pwd();
 	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "cd", 3) == 0)
 		ft_cd(shell, i);
 	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "echo", 5) == 0)

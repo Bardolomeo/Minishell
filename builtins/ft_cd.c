@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
+/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:21:47 by mtani             #+#    #+#             */
-/*   Updated: 2024/05/09 16:01:41 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/09 17:40:41 by mtani            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,14 @@ void	ft_cd(t_shell *shell, int i)
 	else if (shell->cmd_table[i].cmd.cmd_wargs[2] != NULL)
 	{
 		ft_putstr_fd("cd: too many arguments\n", 2);
+		*exit_status() = 1;
 	}
 	else
 	{
 		if (chdir(shell->cmd_table[i].cmd.cmd_wargs[1]) != 0)
+		{
+			*exit_status() = 1;
 			perror(RED "minishell$ " WHITE);
+		}
 	}
 }
