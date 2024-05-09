@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:21:47 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/15 10:31:16 by mtani            ###   ########.fr       */
+/*   Updated: 2024/05/09 16:01:41 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	ft_cd(t_shell *shell, int i)
 {
-	if (shell->cmd_table[i].cmd.cmd_wargs[1] == NULL || ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[1], "~", 1) == 0)
+	if (shell->cmd_table[i].cmd.cmd_wargs[1] == NULL
+		|| ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[1], "~", 1) == 0)
 	{
 		if (chdir(ft_getenv("HOME", 0)) != 0)
 			perror(RED "minishell$ " WHITE);

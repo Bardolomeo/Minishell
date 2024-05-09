@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/09 15:15:22 by mtani            ###   ########.fr       */
+/*   Updated: 2024/05/09 16:20:49 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ void					ft_echo(t_shell *shell, int i);
 void					ft_env(t_shell *shell, int i);
 void					ft_export(t_shell *shell, int i, char *pflag);
 void					ft_unset(t_shell *shell, int i);
+int						export_error(void);
+void					export_no_args(t_shell *shell);
+void					add_empty_env(char *env, char ***my_env);
+void					add_env(t_shell *shell, char *key, char *value);
 
 // Garbage collector
 void					*ft_malloc(size_t size);

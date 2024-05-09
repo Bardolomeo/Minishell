@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:42 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/23 14:00:14 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/09 16:02:08 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 void	ft_echo(t_shell *shell, int i)
 {
-	int		j;
-	int		n_flag;
+	int	j;
+	int	n_flag;
 
 	j = 1;
 	n_flag = 0;
-	if (shell->cmd_table[i].cmd.cmd_wargs[1] && !ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[1], "-n", 3))
+	if (shell->cmd_table[i].cmd.cmd_wargs[1]
+		&& !ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[1], "-n", 3))
 	{
 		n_flag = 1;
 		j++;

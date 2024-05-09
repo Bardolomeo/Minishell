@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:26:07 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/16 13:59:35 by mtani            ###   ########.fr       */
+/*   Updated: 2024/05/09 16:26:42 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ static void	ft_unsetenv(char *arg, t_shell *shell)
 
 	i = 0;
 	j = 0;
-	new_env = (char **)ft_malloc(sizeof(char *) * (ft_arrlen(*(shell->my_env)) + 1));
+	new_env = (char **)ft_malloc(sizeof(char *) * (ft_arrlen(*(shell->my_env))
+				+ 1));
 	if (!new_env)
 		exit(1);
 	while ((*shell->my_env)[i])
@@ -42,7 +43,8 @@ static void	ft_unsetenv(char *arg, t_shell *shell)
 		}
 		if (ft_strncmp((*shell->my_env)[i], arg, ft_strlen(arg)) == 0)
 		{
-			if (!((*shell->my_env)[i][ft_strlen(arg)] == '=') && !((*shell->my_env)[i][ft_strlen(arg)] == 0))
+			if (!((*shell->my_env)[i][ft_strlen(arg)] == '=')
+				&& !((*shell->my_env)[i][ft_strlen(arg)] == 0))
 			{
 				new_env[j] = ft_strdup((*shell->my_env)[i]);
 				j++;
@@ -56,7 +58,7 @@ static void	ft_unsetenv(char *arg, t_shell *shell)
 
 void	ft_unset(t_shell *shell, int i)
 {
-	int		j;
+	int	j;
 
 	j = 1;
 	if (!shell->cmd_table[i].cmd.cmd_wargs[1])
@@ -68,9 +70,9 @@ void	ft_unset(t_shell *shell, int i)
 	{
 		if (ft_strchr(shell->cmd_table[i].cmd.cmd_wargs[j], '='))
 		{
-			ft_putstr_fd(RED"minishell: unset: `"WHITE, 2);
+			ft_putstr_fd(RED "minishell: unset: `" WHITE, 2);
 			ft_putstr_fd(shell->cmd_table[i].cmd.cmd_wargs[j], 2);
-			ft_putendl_fd(RED"': not a valid identifier"WHITE, 2);
+			ft_putendl_fd(RED "': not a valid identifier" WHITE, 2);
 		}
 		else
 			ft_unsetenv(shell->cmd_table[i].cmd.cmd_wargs[j], shell);

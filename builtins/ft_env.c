@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 10:25:52 by mtani             #+#    #+#             */
-/*   Updated: 2024/04/18 16:32:10 by mtani            ###   ########.fr       */
+/*   Updated: 2024/05/09 16:02:28 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_env(t_shell *shell, int index)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	if (shell->cmd_table[index].cmd.cmd_wargs[1] != NULL)
