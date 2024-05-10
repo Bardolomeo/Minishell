@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_init_pipes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:24:13 by mtani             #+#    #+#             */
-/*   Updated: 2024/05/09 16:32:44 by mtani            ###   ########.fr       */
+/*   Updated: 2024/05/10 15:48:37 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,10 @@ void	init_mid_pipe(int *fd, int i)
 	close(fd[(i - 1) * 2]);
 	dup2(fd[i * 2 + 1], 1);
 	close(fd[i * 2 + 1]);
+}
+
+void	clean_exit(void)
+{
+	clear_garbage();
+	exit(*exit_status());
 }

@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 13:54:29 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/08 17:55:36 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/09 18:00:05 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	namefile_quotes(t_shell *shell, int *i, int j, int n_io)
 		(*i)++;
 		k++;
 	}
+	shell->input[*i] = ' ';
 	shell->cmd_table[j].io[n_io][k] = '\0';
 }
 

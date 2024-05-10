@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/09 17:39:21 by mtani            ###   ########.fr       */
+/*   Updated: 2024/05/10 15:52:53 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,8 @@ int						reset_io(t_shell *shell);
 void					init_first_pipe(int *fd, int i);
 void					init_mid_pipe(int *fd, int i);
 void					init_last_pipe(int *fd, int i);
+void					sign_check(t_shell *shell, int *is_neg, int *i);
+void					clean_exit(void);
 
 // signals
 void					set_signals(const char *flag);

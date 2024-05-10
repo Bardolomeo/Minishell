@@ -3,14 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_checks.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtani <mtani@student.42.fr>                +#+  +:+       +#+        */
+/*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 16:27:51 by mtani             #+#    #+#             */
-/*   Updated: 2024/05/09 17:43:24 by mtani            ###   ########.fr       */
+/*   Updated: 2024/05/10 15:51:08 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	sign_check(t_shell *shell, int *is_neg, int *i)
+{
+	if (shell->cmd_table->cmd.cmd_wargs[1][0] == '-')
+		*is_neg = 1;
+	if (shell->cmd_table->cmd.cmd_wargs[1][0] == '-'
+		|| shell->cmd_table->cmd.cmd_wargs[1][0] == '+')
+		(*i)++;
+}
 
 int	check_exit_args(t_shell *shell)
 {
@@ -21,10 +30,7 @@ int	check_exit_args(t_shell *shell)
 	is_neg = 0;
 	if (!shell->cmd_table->cmd.cmd_wargs[1])
 		return (1);
-	if (shell->cmd_table->cmd.cmd_wargs[1][0] == '-')
-		is_neg = 1;
-	if (shell->cmd_table->cmd.cmd_wargs[1][0] == '-' || shell->cmd_table->cmd.cmd_wargs[1][0] == '+')
-		i++;
+	sign_check(shell, &is_neg, &i);
 	while (shell->cmd_table->cmd.cmd_wargs[1][++i])
 	{
 		if (!ft_isdigit(shell->cmd_table->cmd.cmd_wargs[1][i]))
@@ -39,12 +45,6 @@ int	check_exit_args(t_shell *shell)
 			return (0);
 	}
 	return (1);
-}
-
-void	clean_exit(void)
-{
-	clear_garbage();
-	exit(*exit_status());
 }
 
 void	check_exit(t_shell *shell)
@@ -103,8 +103,7 @@ int	check_builtins(t_shell *shell, int i, char *pflag)
 		ft_cd(shell, i);
 	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "echo", 5) == 0)
 		ft_echo(shell, i);
-	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0],
-			"export", 7) == 0)
+	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "export", 7) == 0)
 		ft_export(shell, i, pflag);
 	else if (ft_strncmp(shell->cmd_table[i].cmd.cmd_wargs[0], "unset", 6) == 0)
 		ft_unset(shell, i);
