@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mtani <mtani@student.42.fr>                +#+  +:+       +#+         #
+#    By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 14:01:07 by gsapio            #+#    #+#              #
-#    Updated: 2024/05/09 16:40:14 by mtani            ###   ########.fr        #
+#    Updated: 2024/05/10 15:53:49 by gsapio           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,6 @@ $(NAME):		$(OBJS)
 				make -C $(LIBFT_PATH) --no-print-directory
 				make bonus -C $(LIBFT_PATH) --no-print-directory
 				$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(PATH_LIBS) $(LFLAGS)
-				#clear
 
 clean:
 				$(RM) $(OBJS)

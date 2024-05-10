@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 13:23:06 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/10 15:52:53 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/10 16:16:35 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ int						heredoc_input_setter(t_shell *shell, char *limiter,
 int						red_doc_loop_no_quotes(t_shell *shell, int *tmp,
 							char *quotes);
 int						redirect_heredoc_loop(t_shell *shell, int *tmp, int *k,
-							char *limiter);
+							char **limiter);
 int						redirect_heredoc(t_shell *shell, int j, int *i);
 int						create_heredoc_parent(int pid, int *status, int fd);
 void					create_heredoc_child(char *limiter, int fd);

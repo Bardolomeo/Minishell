@@ -6,7 +6,7 @@
 /*   By: gsapio <gsapio@student.42firenze.it >      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 13:39:18 by gsapio            #+#    #+#             */
-/*   Updated: 2024/05/08 14:00:06 by gsapio           ###   ########.fr       */
+/*   Updated: 2024/05/10 16:22:22 by gsapio           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	red_doc_loop_no_quotes(t_shell *shell, int *tmp, char *quotes)
 			return (0);
 		}
 	}
-	if ((shell->input[*tmp + 1] == ' ' || shell->input[*tmp + 1] == '\0')
+	if ((shell->input[*tmp + 1] == ' ' || shell->input[*tmp] == '\0')
 		&& (*quotes == 0))
 	{
 		shell->input[*tmp] = ' ';
@@ -71,7 +71,7 @@ int	red_doc_loop_no_quotes(t_shell *shell, int *tmp, char *quotes)
 	return (1);
 }
 
-int	redirect_heredoc_loop(t_shell *shell, int *tmp, int *k, char *limiter)
+int	redirect_heredoc_loop(t_shell *shell, int *tmp, int *k, char **limiter)
 {
 	char	quote;
 
@@ -86,7 +86,7 @@ int	redirect_heredoc_loop(t_shell *shell, int *tmp, int *k, char *limiter)
 		}
 		if (!red_doc_loop_no_quotes(shell, tmp, &quote))
 			break ;
-		limiter[*k] = shell->input[*tmp];
+		(*limiter)[*k] = shell->input[*tmp];
 		shell->input[*tmp] = ' ';
 		(*k)++;
 		(*tmp)++;
@@ -109,7 +109,7 @@ int	redirect_heredoc(t_shell *shell, int j, int *i)
 	while (shell->input[tmp] && shell->input[tmp] == ' ')
 		tmp++;
 	k = 0;
-	if (!redirect_heredoc_loop(shell, &tmp, &k, limiter))
+	if (!redirect_heredoc_loop(shell, &tmp, &k, &limiter))
 		return (0);
 	if (!heredoc_input_setter(shell, limiter, j, k))
 		return (0);
